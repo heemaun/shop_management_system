@@ -8,4 +8,48 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     use HasFactory;
+
+    protected $table = 'transactions';
+
+    protected $fillable = [
+        'shop_id',
+        'user_id',
+        'from_account',
+        'to_account',
+        'from_user',
+        'to_user',
+        'from_select',
+        'to_select',
+        'amount'
+    ];
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function fromAccount()
+    {
+        return $this->belongsTo(Account::class,'from_account');
+    }
+
+    public function toAccount()
+    {
+        return $this->belongsTo(Account::class,'to_account');
+    }
+
+    public function fromUser()
+    {
+        return $this->belongsTo(User::class,'from_user');
+    }
+
+    public function toUser()
+    {
+        return $this->belongsTo(User::class,'to_user');
+    }
 }

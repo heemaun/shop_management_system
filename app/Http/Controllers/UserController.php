@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -12,9 +16,15 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($key = null, $status = null)
     {
-        //
+        $users = User::where('email',$key)
+                        ->orWhere('name',$key)
+                        ->orWhere('phone',$key)
+                        ->where('status',$status)
+                        ->where('shop_id',getUser()->shop_id)
+                        ->get();
+        return response(view('user.index',compact('users')));
     }
 
     /**
@@ -24,7 +34,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return response(view('user.create'));
     }
 
     /**
@@ -35,7 +45,61 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = Validator::make($request->all(),[
+            'name'          => 'required|string|min:3|max:30',
+            'email'         => 'required|email|unique:users,email',
+            'phone'         => 'required|numeric|unique:users,phone',
+            'user_name'     => 'required|unique:users,user_name',
+            'password'      => 'required|string|min:8|max:20',
+            'status'        => 'required',
+            'salary'        => 'nullable|numeric',
+            'date_of_birth' => 'nullable|date',
+            'picture'       => 'nullable|string',
+            'country'       => 'nullable|string',
+            'district'      => 'nullable|string',
+            'zip_code'      => 'nullable|numeric',
+        ]);
+
+        if($data->fails()){
+            return response()->json([
+                'status' => 'errors',
+                'errors' => $data->errors(),
+            ]);
+        }
+
+        DB::beginTransaction();
+
+        try{
+            $data->validate();
+
+            User::create([
+                'shop_id'       => getUser()->shop_id,
+                'name'          => $data['name'],
+                'email'         => $data['email'],
+                'phone'         => $data['phone'],
+                'user_name'     => $data['user_name'],
+                'password'      => $data['password'],
+                'status'        => $data['status'],
+                'salary'        => $data['salary'],
+                'date_of_birth' => $data['date_of_birth'],
+                'picture'       => $data['picture'],
+                'country'       => $data['country'],
+                'district'      => $data['district'],
+                'zip_code'      => $data['zip_code'],
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User added successfully',
+            ]);
+        }catch(Exception $e){
+            return response()->json([
+                'status'    => 'exception',
+                'message'   => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -46,7 +110,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return response(view('user.show',compact('user')));
     }
 
     /**
@@ -57,7 +121,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return response(view('user.edit',compact('user')));
     }
 
     /**
@@ -69,7 +133,61 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $data = Validator::make($request->all(),[
+            'name'          => 'required|string|min:3|max:30',
+            'email'         => 'required|email|unique:users,email',
+            'phone'         => 'required|numeric|unique:users,phone',
+            'user_name'     => 'required|unique:users,user_name',
+            'password'      => 'required|string|min:8|max:20',
+            'status'        => 'required',
+            'salary'        => 'nullable|numeric',
+            'date_of_birth' => 'nullable|date',
+            'picture'       => 'nullable|string',
+            'country'       => 'nullable|string',
+            'district'      => 'nullable|string',
+            'zip_code'      => 'nullable|numeric',
+        ]);
+
+        if($data->fails()){
+            return response()->json([
+                'status' => 'errors',
+                'errors' => $data->errors(),
+            ]);
+        }
+
+        DB::beginTransaction();
+
+        try{
+            $data->validate();
+
+            $user->name             = $data['name'];
+            $user->email            = $data['email'];
+            $user->phone            = $data['phone'];
+            $user->user_name        = $data['user_name'];
+            $user->password         = Hash::make($data['password']);
+            $user->status           = $data['status'];
+            $user->salary           = $data['salary'];
+            $user->date_of_birth    = $data['date_of_birth'];
+            $user->picture          = $data['picture'];
+            $user->country          = $data['country'];
+            $user->district         = $data['district'];
+            $user->zip_code         = $data['zip_code'];
+
+            $user->save();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User updated successfully',
+            ]);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status'    => 'exception',
+                'message'   => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -78,8 +196,47 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(User $user, Request $request)
     {
-        //
+        $data = Validator::make($request->all(),[
+            'password' => 'required|min:8|max:20',
+        ]);
+
+        if($data->fails()){
+            return response()->json([
+                'status' => 'errors',
+                'errors' => $data->errors(),
+            ]);
+        }
+
+        DB::beginTransaction();
+
+        try{
+            $data->validate();
+
+            if(Hash::check($data['password'],getUser()->password)){
+                $user->delete();
+
+                DB::commit();
+
+                return response()->json([
+                    'status'    => 'success',
+                    'message'   => 'User deleted successfully',
+                ]);
+            }
+
+            DB::rollBack();
+
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Incorrect password',
+            ]);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status'    => 'exception',
+                'message'   => $e->getMessage(),
+            ]);
+        }
     }
 }

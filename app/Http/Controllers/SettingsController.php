@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Settings;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
@@ -14,7 +17,9 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        //
+        $settingss = Settings::where('shop_id',getUser()->shop_id)
+                            ->get();
+        return response(view('settings.index',compact('settingss')));
     }
 
     /**
@@ -24,7 +29,7 @@ class SettingsController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -57,7 +62,7 @@ class SettingsController extends Controller
      */
     public function edit(Settings $settings)
     {
-        //
+        return response(view('settings.edit',compact('settings')));
     }
 
     /**
@@ -69,7 +74,42 @@ class SettingsController extends Controller
      */
     public function update(Request $request, Settings $settings)
     {
-        //
+        $data = Validator::make($request->all(),[
+            'key'   => 'required',
+            'value' => 'required',
+        ]);
+
+        if($data->fails()){
+            return response()->json([
+                'status' => 'errors',
+                'errors' => $data->errors(),
+            ]);
+        }
+
+        DB::beginTransaction();
+
+        try{
+            $data->validate();
+
+            $settings->user_id = getUser()->id;
+            $settings->key = $data['key'];
+            $settings->value = $data['value'];
+
+            $settings->save();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Settings updated successfully',
+            ]);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status'    => 'exception',
+                'message'   => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
