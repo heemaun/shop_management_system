@@ -23,12 +23,11 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('status',['pending','active','deleted','banned','restricted'])->default('pending');
+            $table->enum('gender',['male','female','other']);
             $table->integer('salary')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('picture')->nullable();
-            $table->string('country')->nullable();
-            $table->string('district')->nullable();
-            $table->string('zip_code')->nullable();
+            $table->text('address')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

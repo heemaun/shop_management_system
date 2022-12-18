@@ -29,12 +29,11 @@ class User extends Authenticatable
         'email_verified_at',
         'password',
         'status',
+        'gender',
         'salary',
         'date_of_birth',
         'picture',
-        'country',
-        'district',
-        'zip_code'
+        'address'
     ];
 
     /**

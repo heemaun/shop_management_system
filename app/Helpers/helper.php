@@ -13,7 +13,7 @@ function checkLogin()
 function getUser()
 {
     if(checkLogin()){
-        return User::where('user_id',Session::get('user_id'))->first();
+        return User::where('id',Session::get('user_id'))->first();
     }
     return null;
 }

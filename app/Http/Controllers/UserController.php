@@ -52,12 +52,11 @@ class UserController extends Controller
             'user_name'     => 'required|unique:users,user_name',
             'password'      => 'required|string|min:8|max:20',
             'status'        => 'required',
+            'gender'        => 'required',
             'salary'        => 'nullable|numeric',
-            'date_of_birth' => 'nullable|date',
+            'date_of_birth' => 'nullable|date|date_format:y-m-d H:i:s',
             'picture'       => 'nullable|string',
-            'country'       => 'nullable|string',
-            'district'      => 'nullable|string',
-            'zip_code'      => 'nullable|numeric',
+            'address'       => 'required|text',
         ]);
 
         if($data->fails()){
@@ -80,12 +79,11 @@ class UserController extends Controller
                 'user_name'     => $data['user_name'],
                 'password'      => $data['password'],
                 'status'        => $data['status'],
+                'gender'        => $data['gender'],
                 'salary'        => $data['salary'],
                 'date_of_birth' => $data['date_of_birth'],
                 'picture'       => $data['picture'],
-                'country'       => $data['country'],
-                'district'      => $data['district'],
-                'zip_code'      => $data['zip_code'],
+                'address'       => $data['address'],
             ]);
 
             DB::commit();
@@ -140,12 +138,11 @@ class UserController extends Controller
             'user_name'     => 'required|unique:users,user_name',
             'password'      => 'required|string|min:8|max:20',
             'status'        => 'required',
+            'gender'        => 'required',
             'salary'        => 'nullable|numeric',
             'date_of_birth' => 'nullable|date',
             'picture'       => 'nullable|string',
-            'country'       => 'nullable|string',
-            'district'      => 'nullable|string',
-            'zip_code'      => 'nullable|numeric',
+            'address'       => 'required|text',
         ]);
 
         if($data->fails()){
@@ -166,12 +163,11 @@ class UserController extends Controller
             $user->user_name        = $data['user_name'];
             $user->password         = Hash::make($data['password']);
             $user->status           = $data['status'];
+            $user->gender           = $data['gender'];
             $user->salary           = $data['salary'];
             $user->date_of_birth    = $data['date_of_birth'];
             $user->picture          = $data['picture'];
-            $user->country          = $data['country'];
-            $user->district         = $data['district'];
-            $user->zip_code         = $data['zip_code'];
+            $user->address          = $data['address'];
 
             $user->save();
 
