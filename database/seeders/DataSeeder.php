@@ -2,11 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Nette\Utils\Random;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DataSeeder extends Seeder
 {
@@ -21,7 +26,7 @@ class DataSeeder extends Seeder
             'shop_name' => 'default_shop',
         ]);
 
-        $superAdmin = User::create([
+        User::create([
             'shop_id' => $shop->id,
             'name' => 'Md. Maksuduzzaman Maun',
             'email' => 'heemaun@gmail.com',
@@ -30,10 +35,92 @@ class DataSeeder extends Seeder
             'password' => Hash::make('11111111'),
             'status' => 'active',
             'gender' => 'male',
+            'role' => 'super_admin',
             'salary' => '0',
             'date_of_birth' => '1993-11-8',
             'picture' => '',
             'address' => 'Suihary-Ramnagor Road, Kalitola, Dinajpur - 5200',
         ]);
+
+        User::create([
+            'shop_id' => $shop->id,
+            'name' => 'Heem Zaman',
+            'email' => 'heemzaman@gmail.com',
+            'phone' => '01847437223',
+            'user_name' => 'heemzaman',
+            'password' => Hash::make('11111111'),
+            'status' => 'active',
+            'gender' => 'male',
+            'role' => 'admin',
+            'salary' => '0',
+            'date_of_birth' => '1993-11-8',
+            'picture' => '',
+            'address' => 'Suihary-Ramnagor Road, Kalitola, Dinajpur - 5200',
+        ]);
+        User::create([
+            'shop_id' => $shop->id,
+            'name' => 'Tasnim Tuhin',
+            'email' => 'tasnimtuhin@gmail.com',
+            'phone' => '01771723729',
+            'user_name' => 'tasnimtuhin',
+            'password' => Hash::make('11111111'),
+            'status' => 'active',
+            'gender' => 'female',
+            'role' => 'manager',
+            'salary' => '0',
+            'date_of_birth' => '2003-10-15',
+            'picture' => '',
+            'address' => 'Suihary-Ramnagor Road, Kalitola, Dinajpur - 5200',
+        ]);
+        User::create([
+            'shop_id' => $shop->id,
+            'name' => 'Maksuda Zaman Helem',
+            'email' => 'maksudazamanhelem@gmail.com',
+            'phone' => '01715577541',
+            'user_name' => 'helen',
+            'password' => Hash::make('11111111'),
+            'status' => 'active',
+            'gender' => 'female',
+            'role' => 'seller',
+            'salary' => '0',
+            'date_of_birth' => '1968-11-11',
+            'picture' => '',
+            'address' => 'Suihary-Ramnagor Road, Kalitola, Dinajpur - 5200',
+        ]);
+        User::create([
+            'shop_id' => $shop->id,
+            'name' => 'Nusrat Zaman Nisa',
+            'email' => 'nusrat@gmail.com',
+            'phone' => '01111111111',
+            'user_name' => 'nusrat',
+            'password' => Hash::make('11111111'),
+            'status' => 'active',
+            'gender' => 'female',
+            'role' => 'customer',
+            'salary' => '0',
+            'date_of_birth' => '2003-1-17',
+            'picture' => '',
+            'address' => 'Suihary-Ramnagor Road, Kalitola, Dinajpur - 5200',
+        ]);
+
+        for($x=0;$x<5;$x++){
+            Category::create([
+                'shop_id' => $shop->id,
+                'user_id' => 1,
+                'name' => 'Category '.($x+1),
+                'status' => 'active',
+            ]);
+        }
+
+        for($x=0;$x<50;$x++){
+            Product::create([
+                'shop_id' => $shop->id,
+                'user_id' => 1,
+                'category_id' => rand(1,5),
+                'name' => 'Product '.($x+1),
+                'status' => 'active',
+                'picture' => 'product_'.rand(1,7).'.jpg',
+            ]);
+        }
     }
 }

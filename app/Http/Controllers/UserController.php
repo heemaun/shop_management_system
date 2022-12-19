@@ -45,19 +45,21 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
         $data = Validator::make($request->all(),[
             'name'          => 'required|string|min:3|max:30',
             'email'         => 'required|email|unique:users,email',
             'phone'         => 'required|numeric|unique:users,phone',
             'user_name'     => 'required|unique:users,user_name',
             'password'      => 'required|string|min:8|max:20',
-            'status'        => 'required',
+            // 'status'        => 'required',
             'gender'        => 'required',
             'salary'        => 'nullable|numeric',
-            'date_of_birth' => 'nullable|date|date_format:y-m-d H:i:s',
+            'date_of_birth' => 'nullable|date|date_format:Y-m-d',
             'picture'       => 'nullable|string',
-            'address'       => 'required|text',
+            'address'       => 'required|string',
         ]);
+
 
         if($data->fails()){
             return response()->json([
@@ -69,20 +71,20 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
             User::create([
-                'shop_id'       => getUser()->shop_id,
+                'shop_id'       => 1,
                 'name'          => $data['name'],
                 'email'         => $data['email'],
                 'phone'         => $data['phone'],
                 'user_name'     => $data['user_name'],
-                'password'      => $data['password'],
-                'status'        => $data['status'],
+                'password'      => Hash::make($data['password']),
+                'status'        => 'pending',
                 'gender'        => $data['gender'],
-                'salary'        => $data['salary'],
+                'salary'        => 0,
                 'date_of_birth' => $data['date_of_birth'],
-                'picture'       => $data['picture'],
+                'picture'       => "",
                 'address'       => $data['address'],
             ]);
 

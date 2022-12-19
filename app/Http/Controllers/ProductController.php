@@ -100,8 +100,13 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show(Product $product, Request $request)
     {
+        if($request->dataType !== null){
+            return response()->json([
+                'product' => $product,
+            ]);
+        }
         return response(view('product.show',compact('product')));
     }
 

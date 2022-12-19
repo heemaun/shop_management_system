@@ -8,6 +8,7 @@
         <title>Shop Management System</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="{{ asset('css/font-awesome/all.min.css') }}">
 
         @if (checkLogin())
 
@@ -115,7 +116,7 @@
         </header>
 
 
-        <section id="content-loader" class="content-loader">
+        <section id="content_loader" class="content-loader">
 
         </section>
 
@@ -123,12 +124,22 @@
 
         <aside>
             <ul>
-                <li id="admin">Admin</li>
+                @if (checkSuperAdmin() || checkAdmin())
+                <li id="admin">Admins</li>
+                @endif
+                @if (checkSuperAdmin() || checkAdmin()||checkManager())
                 <li id="manager">Managers</li>
+                @endif
+                @if (checkSuperAdmin()||checkAdmin()||checkManager()||checkSeller())
                 <li id="seller">Sellers</li>
+                @endif
+                @if (checkSuperAdmin()||checkAdmin()||checkManager()||checkSeller()||checkCustomer())
                 <li id="customer">Customers</li>
+                @endif
             </ul>
         </aside>
+
+        @if (checkSuperAdmin() || checkAdmin())
 
         <section id="admin_panel" class="admin-panel hidden">
             <ul>
@@ -138,29 +149,55 @@
             </ul>
         </section>
 
+        @endif
+
+        @if (checkSuperAdmin() || checkAdmin()||checkManager())
+
         <section id="manager_panel" class="manager-panel hidden">
             <ul>
+                @if (checkManager())
                 <li id="manager_panel_dashboard"><a href="#">Dashboard</a></li>
+                @endif
+                @if (checkSuperAdmin() || checkAdmin())
                 <li id="manager_panel_craete"><a href="{{ route('users.create') }}">Create</a></li>
+                @endif
                 <li id="manager_panel_index"><a href="{{ route('users.index') }}">Index</a></li>
             </ul>
         </section>
 
+        @endif
+
+        @if (checkSuperAdmin()||checkAdmin()||checkManager()||checkSeller())
+
         <section id="seller_panel" class="seller-panel hidden">
             <ul>
+                @if (checkSeller())
                 <li id="seller_panel_dashboard"><a href="#">Dashboard</a></li>
+                @endif
+                @if (checkSuperAdmin() || checkAdmin()||checkManager())
                 <li id="seller_panel_craete"><a href="{{ route('users.create') }}">Create</a></li>
+                @endif
                 <li id="seller_panel_index"><a href="{{ route('users.index') }}">Index</a></li>
             </ul>
         </section>
 
+        @endif
+
+        @if (checkSuperAdmin()||checkAdmin()||checkManager()||checkSeller()||checkCustomer())
+
         <section id="customer_panel" class="customer-panel hidden">
             <ul>
+                @if (checkCustomer())
                 <li id="user_panel_dashboard"><a href="#">Dashboard</a></li>
+                @endif
+                @if (checkSuperAdmin() || checkAdmin()||checkManager())
                 <li id="user_panel_craete"><a href="{{ route('users.create') }}">Create</a></li>
+                @endif
                 <li id="user_panel_index"><a href="{{ route('users.index') }}">Index</a></li>
             </ul>
         </section>
+
+        @endif
 
         <section id="change_password_div" class="change-password-div hide">
             <form action="{{ route('change-password') }}" method="POST" id="change_password_form">
@@ -215,22 +252,22 @@
                         <span class="register-error" id="register_name_error"></span>
 
                         <label for="register_email" class="form-label">Email</label>
-                        <input type="email" name="name" id="register_email" class="form-control" placeholder="enter your email">
+                        <input type="email" name="email" id="register_email" class="form-control" placeholder="enter your email">
                         <span class="register-error" id="register_email_error"></span>
 
                         <label for="register_phone" class="form-label">Phone</label>
-                        <input type="phone" name="email" id="register_phone" class="form-control" placeholder="enter your phone">
+                        <input type="phone" name="phone" id="register_phone" class="form-control" placeholder="enter your phone">
                         <span class="register-error" id="register_phone_error"></span>
 
                         <label for="register_user_name" class="form-label">User name</label>
-                        <input type="phone" name="phone" id="register_user_name" class="form-control" placeholder="enter your user name">
+                        <input type="phone" name="user_name" id="register_user_name" class="form-control" placeholder="enter your user name">
                         <span class="register-error" id="register_user_name_error"></span>
 
                         <label for="register_gender" class="form-label">Gender</label>
                         <select name="gender" id="register_gender" class="form-select">
                             <option value="">Select a gender</option>
-                            <option value="man">Man</option>
-                            <option value="woman">Woman</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
                             <option value="other">Other</option>
                         </select>
                         <span class="register-error" id="register_gender_error"></span>
@@ -265,6 +302,8 @@
         <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="{{ asset('js/font-awesome/all.min.js') }}"></script>
         <script src="{{ asset('js/system/index.js') }}"></script>
+        <script src="{{ asset('js/system/home.js') }}"></script>
     </body>
 </html>

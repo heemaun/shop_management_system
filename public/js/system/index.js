@@ -4,12 +4,30 @@ function home()
         url: "/home",
         type: "GET",
         success: function(response){
-            $("#content-loader").html(response);
+            $("#content_loader").html(response);
         }
     })
 }
 
 home();
+
+$("#home").click(function(){
+    $("html, body").animate({
+        scrollTop: $(".content-loader main").offset().top - 40
+    },200);
+});
+
+$("#products").click(function(){
+    $("html, body").animate({
+        scrollTop: $(".content-loader section").offset().top - 40
+    },200);
+});
+
+$("#contacts").click(function(){
+    $("html, body").animate({
+        scrollTop: $(".content-loader footer").offset().top - 40
+    },200);
+});
 
 $("#login_trigger").click(function(){
     $("#login_div").removeClass("hide");
@@ -29,6 +47,7 @@ $("#register_close").click(function(){
 
 $("#change_password_trigger").click(function(){
     $("#change_password_div").removeClass("hide");
+    $("#nav_options").toggleClass("hide");
 });
 
 $("#change_password_close").click(function(){
@@ -161,7 +180,8 @@ $("#register_form").on("submit", function(e){
             }
 
             else{
-
+                toastr.success(response.message);
+                $("#register_div").addClass("hide");
             }
         },
     });
