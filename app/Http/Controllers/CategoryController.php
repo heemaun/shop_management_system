@@ -16,12 +16,30 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($name = null,$status = null)
+    public function index(Request $request)
     {
-        $categories = Category::where('name',$name)
-                                ->where('status',$status)
-                                ->where('shop_id',getUser()->shop_id)
-                                ->get();
+        if(array_key_exists('search',$request->all())){
+
+            if(strcmp($request->status,'all')==0){
+                $status = ['pending','active','deleted','banned','restricted'];
+            }
+            else{
+                $status = [$request->status];
+            }
+
+            $categories = Category::where('name','like','%'.$request->search.'%')
+                                    ->whereIn('status',$status)
+                                    ->where('shop_id',getUser()->shop_id)
+                                    ->orderBy('status')
+                                    ->orderBy('name')
+                                    ->get();
+
+            return response(view('category.search',compact('categories')));
+        }
+        $categories = Category::where('shop_id',getUser()->shop_id)
+                                    ->orderBy('status')
+                                    ->orderBy('name')
+                                    ->get();
         return response(view('category.index',compact('categories')));
     }
 
@@ -58,9 +76,9 @@ class CategoryController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
-            Category::create([
+            $category = Category::create([
                 'shop_id'   => getUser()->shop_id,
                 'user_id'   => getUser()->id,
                 'name'      => $data['name'],
@@ -72,6 +90,7 @@ class CategoryController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Category added successfully',
+                'url' => route('categories.show',$category->id),
             ]);
         }catch(Exception $e){
             return response()->json([
@@ -127,8 +146,9 @@ class CategoryController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
+            $category->user_id = getUser()->id;
             $category->name = $data['name'];
             $category->status = $data['status'];
 
@@ -139,6 +159,7 @@ class CategoryController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Category updated successfully',
+                'url' => route('categories.show',$category->id),
             ]);
         }catch(Exception $e){
             DB::rollBack();
@@ -171,7 +192,7 @@ class CategoryController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
             if(Hash::check($data['password'],getUser()->password)){
                 $category->delete();
@@ -180,7 +201,8 @@ class CategoryController extends Controller
 
                 return response()->json([
                     'status'    => 'success',
-                    'message'   => 'Product deleted successfully',
+                    'message'   => 'Category deleted successfully',
+                    'url' => route('categories.index'),
                 ]);
             }
 

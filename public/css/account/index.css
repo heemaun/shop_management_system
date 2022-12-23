@@ -18,6 +18,9 @@
 .accounts-index .table-container {
   width: 100%;
 }
+.accounts-index .table-container .index-error {
+  color: red;
+}
 .accounts-index .table-container table tbody .clickable {
   cursor: pointer;
 }/*# sourceMappingURL=index.css.map */

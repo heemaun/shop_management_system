@@ -19,6 +19,10 @@
     .table-container{
         width: 100%;
 
+        .index-error{
+            color: red;
+        }
+
         table{
             tbody{
                 .clickable{

@@ -19,7 +19,7 @@ $("#content_loader").on("keyup","#accounts_index_search",function(){
             search: search,
         },
         success: function(response){
-            $("#content_loader tbody").html(response);
+            $("#content_loader #accounts_index_table_container").html(response);
         }
     });
 });

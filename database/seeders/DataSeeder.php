@@ -103,12 +103,14 @@ class DataSeeder extends Seeder
             'address' => 'Suihary-Ramnagor Road, Kalitola, Dinajpur - 5200',
         ]);
 
+        $status = ['pending','active','deleted','banned','restricted'];
+
         for($x=0;$x<5;$x++){
             Category::create([
                 'shop_id' => $shop->id,
                 'user_id' => 1,
                 'name' => 'Category '.($x+1),
-                'status' => 'active',
+                'status' => $status[rand(0,4)],
             ]);
         }
 

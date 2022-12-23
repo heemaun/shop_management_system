@@ -18,13 +18,13 @@ class AccountController extends Controller
      */
     public function index(Request $request)
     {
-        $data = $request->all();
-        if(array_key_exists('search',$data)){
+        if(array_key_exists('search',$request->all())){
             $accounts = Account::where('name','like','%'.$request->search.'%')
                                     ->where('shop_id',getUser()->shop_id)
                                     ->orderBy('name')
                                     ->get();
-            return response(view('account.search',compact('account')));
+
+            return response(view('account.search',compact('accounts')));
         }
         $accounts = Account::where('shop_id',getUser()->shop_id)
                                     ->orderBy('name')
