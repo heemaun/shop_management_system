@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use WisdomDiala\Countrypkg\Models\Country;
 
 class HomeController extends Controller
 {
@@ -18,5 +16,10 @@ class HomeController extends Controller
     {
         $categories = Category::all();
         return view('system.home',compact('categories'));
+    }
+
+    public function dashboard(Request $request)
+    {
+        return response(view('system.dashboard',compact('request')));
     }
 }

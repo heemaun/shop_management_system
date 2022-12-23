@@ -2,6 +2,7 @@ function home()
 {
     $.ajax({
         url: "/home",
+        // url: "/accounts/1/edit",
         type: "GET",
         success: function(response){
             $("#content_loader").html(response);
@@ -184,5 +185,20 @@ $("#register_form").on("submit", function(e){
                 $("#register_div").addClass("hide");
             }
         },
+    });
+});
+
+$("#dashboard").click(function(e){
+    e.preventDefault();
+    let url = $(this).children("a").attr("href");
+    $.ajax({
+        url: url,
+        type: "GET",
+        data:{
+            user_type: "admin",
+        },
+        success: function(response){
+            $("#content_loader").html(response);
+        }
     });
 });

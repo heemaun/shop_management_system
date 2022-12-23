@@ -34,6 +34,11 @@ body header nav ul li:hover {
 body header nav .nav-option-trigger {
   cursor: pointer;
 }
+body header nav .nav-option-trigger span {
+  font-size: 0.7rem;
+  font-weight: normal;
+  font-style: italic;
+}
 body header nav .nav-options {
   position: absolute;
   top: 40px;
@@ -76,6 +81,13 @@ body aside ul li {
   padding: 1rem 0.5rem;
   cursor: pointer;
   border-bottom: 0.1rem solid gray;
+}
+body aside ul li a {
+  color: white;
+  text-decoration: none;
+}
+body aside ul li a:hover {
+  color: white;
 }
 body aside ul li:hover {
   background: gray;
@@ -220,8 +232,10 @@ body .hidden {
   transform: translateX(-1000px);
 }
 body .content-loader {
-  margin-top: 40px;
-  margin-left: var(--margin_left);
+  padding-top: 40px;
+  padding-left: var(--margin_left);
+  width: 100%;
+  min-height: 100vh;
 }
 body .login-div {
   position: fixed;

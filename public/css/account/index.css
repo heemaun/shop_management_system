@@ -1,0 +1,23 @@
+.accounts-index {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  gap: 0.5rem;
+}
+.accounts-index .top {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+.accounts-index .table-container {
+  width: 100%;
+}
+.accounts-index .table-container table tbody .clickable {
+  cursor: pointer;
+}/*# sourceMappingURL=index.css.map */

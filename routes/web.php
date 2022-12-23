@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AccountsController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
@@ -33,9 +33,10 @@ Route::get('/logout',[LoginController::class,'logout'])->name('logout');
 //system routes
 Route::get('/',[HomeController::class,'index'])->name('index');
 Route::get('/home',[HomeController::class,'home'])->name('home');
+Route::get('/dashboard',[HomeController::class,'dashboard'])->name('dashboard');
 
 //resource routes
-Route::resource('/accounts',AccountsController::class);
+Route::resource('/accounts',AccountController::class);
 Route::resource('/categories',CategoryController::class);
 Route::resource('/products',ProductController::class);
 Route::resource('/purchases',PurchaseOrderController::class);

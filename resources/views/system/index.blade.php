@@ -1,42 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>Shop Management System</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="{{ asset('css/font-awesome/all.min.css') }}">
 
-        @if (checkLogin())
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Shop Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ asset('css/font-awesome/all.min.css') }}">
 
+    @if (checkLogin())
         <style>
-            :root{
+            :root {
                 --margin_left: 91px;
             }
         </style>
-
-        @else
-
+    @else
         <style>
-            :root{
+            :root {
                 --margin_left: 0px;
             }
         </style>
+    @endif
 
-        @endif
+    <link rel="stylesheet" href="{{ asset('css/system/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/system/home.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/system/dashboard.css') }}">
 
-        <link rel="stylesheet" href="{{ asset('css/system/index.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/system/home.css') }}">
-
-        @if (checkLogin())
-
-        <link rel="stylesheet" href="{{ asset('css/accounts/create.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/accounts/edit.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/accounts/index.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/accounts/show.css') }}">
+    @if (checkLogin())
+        <link rel="stylesheet" href="{{ asset('css/account/create.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/account/edit.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/account/index.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/account/show.css') }}">
 
         <link rel="stylesheet" href="{{ asset('css/category/create.css') }}">
         <link rel="stylesheet" href="{{ asset('css/category/edit.css') }}">
@@ -87,130 +84,121 @@
         <link rel="stylesheet" href="{{ asset('css/user/edit.css') }}">
         <link rel="stylesheet" href="{{ asset('css/user/index.css') }}">
         <link rel="stylesheet" href="{{ asset('css/user/show.css') }}">
-        @endif
-    </head>
-    <body>
-        <header>
-            <nav>
-                <a href="{{ route('index') }}" id="logo" class="logo">Logo</a>
-                <ul>
-                    <li id="home">Home</li>
-                    <li id="products">Products</li>
-                    <li id="contacts">Contacts</li>
-                </ul>
-                @if (checkLogin())
-                <span id="nav_option_trigger" class="nav-option-trigger">{{ getUser()->name }}</span>
-                <ul id="nav_options" class="nav-options hide">
-                    <li><a href="{{ route('users.show',getUser()->id) }}">Profile</a></li>
-                    <li><a href="{{ route('settings.index') }}">Settings</a></li>
-                    <li id="change_password_trigger">Change Password</li>
-                    <li><a href="{{ route('logout') }}">Logout</a></li>
-                </ul>
-                @else
-                <ul >
-                    <li id="login_trigger">Login</li>
-                    <li id="register_trigger">Register</li>
-                </ul>
-                @endif
-            </nav>
-        </header>
+    @endif
+</head>
 
-
-        <section id="content_loader" class="content-loader">
+<body>
+    <header>
+        <nav>
+            <a href="{{ route('index') }}" id="logo" class="logo">Logo</a>
+            <ul>
+                <li id="home">Home</li>
+                <li id="products">Products</li>
+                <li id="contacts">Contacts</li>
+            </ul>
+            @if (checkLogin())
+            <span id="nav_option_trigger" class="nav-option-trigger">{{ getUser()->name }}<span>{{ ' ['.ucwords(getuser()->role).']' }}</span></span>
+            <ul id="nav_options" class="nav-options hide">
+                <li><a href="{{ route('users.show',getUser()->id) }}">Profile</a></li>
+                <li><a href="{{ route('settings.index') }}">Settings</a></li>
+                <li id="change_password_trigger">Change Password</li>
+                <li><a href="{{ route('logout') }}">Logout</a></li>
+            </ul>
+            @else
+            <ul >
+                <li id="login_trigger">Login</li>
+                <li id="register_trigger">Register</li>
+            </ul>
+            @endif
+        </nav>
+    </header>
+    <section id="content_loader" class="content-loader">
 
         </section>
 
-        @if (checkLogin())
+    @if (checkLogin())
 
         <aside>
             <ul>
+                <li id="dashboard"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                 @if (checkSuperAdmin() || checkAdmin())
                 <li id="admin">Admins</li>
                 @endif
-                @if (checkSuperAdmin() || checkAdmin()||checkManager())
+                @if (checkSuperAdmin() || checkAdmin() || checkManager())
                 <li id="manager">Managers</li>
                 @endif
-                @if (checkSuperAdmin()||checkAdmin()||checkManager()||checkSeller())
+                @if (checkSuperAdmin() || checkAdmin() || checkManager() || checkSeller())
                 <li id="seller">Sellers</li>
                 @endif
-                @if (checkSuperAdmin()||checkAdmin()||checkManager()||checkSeller()||checkCustomer())
+                @if (checkSuperAdmin() || checkAdmin() || checkManager() || checkSeller() || checkCustomer())
                 <li id="customer">Customers</li>
                 @endif
             </ul>
         </aside>
 
         @if (checkSuperAdmin() || checkAdmin())
+            <section id="admin_panel" class="admin-panel hidden">
+                <ul>
+                    <li id="admin_panel_craete"><a href="{{ route('users.create') }}">Create</a></li>
+                    <li id="admin_panel_index"><a href="{{ route('users.index') }}">Index</a></li>
+                </ul>
+            </section>
+        @endif
 
-        <section id="admin_panel" class="admin-panel hidden">
-            <ul>
-                <li id="admin_panel_dashboard"><a href="#">Dashboard</a></li>
-                <li id="admin_panel_craete"><a href="{{ route('users.create') }}">Create</a></li>
-                <li id="admin_panel_index"><a href="{{ route('users.index') }}">Index</a></li>
-            </ul>
-        </section>
+        @if (checkSuperAdmin() || checkAdmin() || checkManager())
+
+            <section id="manager_panel" class="manager-panel hidden">
+                <ul>
+                    @if (checkSuperAdmin() || checkAdmin())
+                        <li id="manager_panel_craete"><a href="{{ route('users.create') }}">Create</a></li>
+                    @endif
+                    <li id="manager_panel_index"><a href="{{ route('users.index') }}">Index</a></li>
+                </ul>
+            </section>
 
         @endif
 
-        @if (checkSuperAdmin() || checkAdmin()||checkManager())
+        @if (checkSuperAdmin() || checkAdmin() || checkManager() || checkSeller())
 
-        <section id="manager_panel" class="manager-panel hidden">
-            <ul>
-                @if (checkManager())
-                <li id="manager_panel_dashboard"><a href="#">Dashboard</a></li>
-                @endif
-                @if (checkSuperAdmin() || checkAdmin())
-                <li id="manager_panel_craete"><a href="{{ route('users.create') }}">Create</a></li>
-                @endif
-                <li id="manager_panel_index"><a href="{{ route('users.index') }}">Index</a></li>
-            </ul>
-        </section>
+            <section id="seller_panel" class="seller-panel hidden">
+                <ul>
+                    @if (checkSuperAdmin() || checkAdmin() || checkManager())
+                        <li id="seller_panel_craete"><a href="{{ route('users.create') }}">Create</a></li>
+                    @endif
+                    <li id="seller_panel_index"><a href="{{ route('users.index') }}">Index</a></li>
+                </ul>
+            </section>
 
         @endif
 
-        @if (checkSuperAdmin()||checkAdmin()||checkManager()||checkSeller())
+        @if (checkSuperAdmin() || checkAdmin() || checkManager() || checkSeller() || checkCustomer())
 
-        <section id="seller_panel" class="seller-panel hidden">
-            <ul>
-                @if (checkSeller())
-                <li id="seller_panel_dashboard"><a href="#">Dashboard</a></li>
-                @endif
-                @if (checkSuperAdmin() || checkAdmin()||checkManager())
-                <li id="seller_panel_craete"><a href="{{ route('users.create') }}">Create</a></li>
-                @endif
-                <li id="seller_panel_index"><a href="{{ route('users.index') }}">Index</a></li>
-            </ul>
-        </section>
-
-        @endif
-
-        @if (checkSuperAdmin()||checkAdmin()||checkManager()||checkSeller()||checkCustomer())
-
-        <section id="customer_panel" class="customer-panel hidden">
-            <ul>
-                @if (checkCustomer())
-                <li id="user_panel_dashboard"><a href="#">Dashboard</a></li>
-                @endif
-                @if (checkSuperAdmin() || checkAdmin()||checkManager())
-                <li id="user_panel_craete"><a href="{{ route('users.create') }}">Create</a></li>
-                @endif
-                <li id="user_panel_index"><a href="{{ route('users.index') }}">Index</a></li>
-            </ul>
-        </section>
+            <section id="customer_panel" class="customer-panel hidden">
+                <ul>
+                    @if (checkSuperAdmin() || checkAdmin() || checkManager())
+                        <li id="user_panel_craete"><a href="{{ route('users.create') }}">Create</a></li>
+                    @endif
+                    <li id="user_panel_index"><a href="{{ route('users.index') }}">Index</a></li>
+                </ul>
+            </section>
 
         @endif
 
         <section id="change_password_div" class="change-password-div hide">
             <form action="{{ route('change-password') }}" method="POST" id="change_password_form">
                 <label for="chnage_password_old_password" class="form-label">Enter old password</label>
-                <input type="password" name="old_password" id="chnage_password_old_password" placeholder="enter old password" class="form-control">
+                <input type="password" name="old_password" id="chnage_password_old_password"
+                    placeholder="enter old password" class="form-control">
                 <span class="change-password-error" id="change_password_old_password_error"></span>
 
                 <label for="chnage_password_new_password" class="form-label">Enter new password</label>
-                <input type="password" name="onew_password" id="chnage_password_new_password" placeholder="enter nre password" class="form-control">
+                <input type="password" name="onew_password" id="chnage_password_new_password"
+                    placeholder="enter nre password" class="form-control">
                 <span class="change-password-error" id="change_password_new_password_error"></span>
 
                 <label for="chnage_password_password_confirmation" class="form-label">Confirm new password</label>
-                <input type="password" name="password_confirmation" id="chnage_password_password_confirmation" placeholder="confirm new password" class="form-control">
+                <input type="password" name="password_confirmation" id="chnage_password_password_confirmation"
+                    placeholder="confirm new password" class="form-control">
                 <span class="change-password-error" id="change_password_password_confirmation_error"></span>
 
                 <div class="btn-container">
@@ -219,19 +207,19 @@
                 </div>
             </form>
         </section>
-
-        @else
-
+    @else
         <section id="login_div" class="login-div hide">
             <form action="{{ route('login') }}" method="POST" id="login_form">
                 <legend>Login Form</legend>
                 @csrf
                 <label for="login_user_name" class="form-label">User Name</label>
-                <input type="text" name="user_name" id="login_user_name" class="form-control" placeholder="enter user name">
+                <input type="text" name="user_name" id="login_user_name" class="form-control"
+                    placeholder="enter user name">
                 <span class="login-error" id="login_user_name_error"></span>
 
                 <label for="login_password" class="form-label">Password</label>
-                <input type="password" name="password" id="login_password" class="form-control" placeholder="enter user password">
+                <input type="password" name="password" id="login_password" class="form-control"
+                    placeholder="enter user password">
                 <span class="login-error" id="login_password_error"></span>
 
                 <div class="btn-container">
@@ -248,19 +236,23 @@
                 <div class="rows">
                     <div class="columns">
                         <label for="register_name" class="form-label">Name</label>
-                        <input type="text" name="name" id="register_name" class="form-control" placeholder="enter your name">
+                        <input type="text" name="name" id="register_name" class="form-control"
+                            placeholder="enter your name">
                         <span class="register-error" id="register_name_error"></span>
 
                         <label for="register_email" class="form-label">Email</label>
-                        <input type="email" name="email" id="register_email" class="form-control" placeholder="enter your email">
+                        <input type="email" name="email" id="register_email" class="form-control"
+                            placeholder="enter your email">
                         <span class="register-error" id="register_email_error"></span>
 
                         <label for="register_phone" class="form-label">Phone</label>
-                        <input type="phone" name="phone" id="register_phone" class="form-control" placeholder="enter your phone">
+                        <input type="phone" name="phone" id="register_phone" class="form-control"
+                            placeholder="enter your phone">
                         <span class="register-error" id="register_phone_error"></span>
 
                         <label for="register_user_name" class="form-label">User name</label>
-                        <input type="phone" name="user_name" id="register_user_name" class="form-control" placeholder="enter your user name">
+                        <input type="phone" name="user_name" id="register_user_name" class="form-control"
+                            placeholder="enter your user name">
                         <span class="register-error" id="register_user_name_error"></span>
 
                         <label for="register_gender" class="form-label">Gender</label>
@@ -274,15 +266,18 @@
                     </div>
                     <div class="columns">
                         <label for="register_password" class="form-label">Password</label>
-                        <input type="password" name="password" id="register_password" class="form-control" placeholder="enter your password">
+                        <input type="password" name="password" id="register_password" class="form-control"
+                            placeholder="enter your password">
                         <span class="register-error" id="register_password_error"></span>
 
                         <label for="register_password_confirmation" class="form-label">Password Confirmation</label>
-                        <input type="password" name="password_confirmation" id="register_password_confirmation" class="form-control" placeholder="enter your password again">
+                        <input type="password" name="password_confirmation" id="register_password_confirmation"
+                            class="form-control" placeholder="enter your password again">
                         <span class="register-error" id="register_password_confirmation_error"></span>
 
                         <label for="register_date_of_birth" class="form-label">Password Confirmation</label>
-                        <input type="date" name="date_of_birth" id="register_date_of_birth" class="form-control" placeholder="enter your birthday">
+                        <input type="date" name="date_of_birth" id="register_date_of_birth" class="form-control"
+                            placeholder="enter your birthday">
                         <span class="register-error" id="register_date_of_birth_error"></span>
 
                         <label for="register_address" class="form-label">Address</label>
@@ -297,13 +292,72 @@
                 </div>
             </form>
         </section>
-        @endif
+    @endif
 
-        <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="{{ asset('js/font-awesome/all.min.js') }}"></script>
-        <script src="{{ asset('js/system/index.js') }}"></script>
-        <script src="{{ asset('js/system/home.js') }}"></script>
-    </body>
+    <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('js/font-awesome/all.min.js') }}"></script>
+
+    <script src="{{ asset('js/system/index.js') }}"></script>
+    <script src="{{ asset('js/system/home.js') }}"></script>
+    <script src="{{ asset('js/system/dashboard.js') }}"></script>
+
+    <script src="{{ asset('js/account/create.js') }}"></script>
+    <script src="{{ asset('js/account/edit.js') }}"></script>
+    <script src="{{ asset('js/account/index.js') }}"></script>
+    <script src="{{ asset('js/account/show.js') }}"></script>
+
+    <script src="{{ asset('js/category/create.js') }}"></script>
+    <script src="{{ asset('js/category/edit.js') }}"></script>
+    <script src="{{ asset('js/category/index.js') }}"></script>
+    <script src="{{ asset('js/category/show.js') }}"></script>
+
+    <script src="{{ asset('js/product/create.js') }}"></script>
+    <script src="{{ asset('js/product/edit.js') }}"></script>
+    <script src="{{ asset('js/product/index.js') }}"></script>
+    <script src="{{ asset('js/product/show.js') }}"></script>
+
+    <script src="{{ asset('js/purchase/create.js') }}"></script>
+    <script src="{{ asset('js/purchase/edit.js') }}"></script>
+    <script src="{{ asset('js/purchase/index.js') }}"></script>
+    <script src="{{ asset('js/purchase/show.js') }}"></script>
+
+    <script src="{{ asset('js/purchase-order/create.js') }}"></script>
+    <script src="{{ asset('js/purchase-order/edit.js') }}"></script>
+    <script src="{{ asset('js/purchase-order/index.js') }}"></script>
+    <script src="{{ asset('js/purchase-order/show.js') }}"></script>
+
+    <script src="{{ asset('js/sell/create.js') }}"></script>
+    <script src="{{ asset('js/sell/edit.js') }}"></script>
+    <script src="{{ asset('js/sell/index.js') }}"></script>
+    <script src="{{ asset('js/sell/show.js') }}"></script>
+
+    <script src="{{ asset('js/sell-order/create.js') }}"></script>
+    <script src="{{ asset('js/sell-order/edit.js') }}"></script>
+    <script src="{{ asset('js/sell-order/index.js') }}"></script>
+    <script src="{{ asset('js/sell-order/show.js') }}"></script>
+
+    <script src="{{ asset('js/settings/create.js') }}"></script>
+    <script src="{{ asset('js/settings/edit.js') }}"></script>
+    <script src="{{ asset('js/settings/index.js') }}"></script>
+    <script src="{{ asset('js/settings/show.js') }}"></script>
+
+    <script src="{{ asset('js/shop/create.js') }}"></script>
+    <script src="{{ asset('js/shop/edit.js') }}"></script>
+    <script src="{{ asset('js/shop/index.js') }}"></script>
+    <script src="{{ asset('js/shop/show.js') }}"></script>
+
+    <script src="{{ asset('js/transaction/create.js') }}"></script>
+    <script src="{{ asset('js/transaction/edit.js') }}"></script>
+    <script src="{{ asset('js/transaction/index.js') }}"></script>
+    <script src="{{ asset('js/transaction/show.js') }}"></script>
+
+    <script src="{{ asset('js/user/create.js') }}"></script>
+    <script src="{{ asset('js/user/edit.js') }}"></script>
+    <script src="{{ asset('js/user/index.js') }}"></script>
+    <script src="{{ asset('js/user/show.js') }}"></script>
+</body>
+
 </html>

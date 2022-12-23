@@ -110,6 +110,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        return response($user);
         return response(view('user.show',compact('user')));
     }
 

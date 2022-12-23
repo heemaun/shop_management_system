@@ -2,26 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Accounts;
+use App\Models\Account;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class AccountsController extends Controller
+class AccountController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($key = null)
+    public function index(Request $request)
     {
-        $accounts = Accounts::where('name',$key)
-                                ->where('shop_id',getUser()->shop_id)
-                                ->get();
-        return response(view('accounts.index',compact('accounts')));
+        $data = $request->all();
+        if(array_key_exists('search',$data)){
+            $accounts = Account::where('name','like','%'.$request->search.'%')
+                                    ->where('shop_id',getUser()->shop_id)
+                                    ->orderBy('name')
+                                    ->get();
+            return response(view('account.search',compact('account')));
+        }
+        $accounts = Account::where('shop_id',getUser()->shop_id)
+                                    ->orderBy('name')
+                                    ->get();
+        return response(view('account.index',compact('accounts')));
     }
 
     /**
@@ -31,7 +39,7 @@ class AccountsController extends Controller
      */
     public function create()
     {
-        return response(view('accounts.create'));
+        return response(view('account.create'));
     }
 
     /**
@@ -57,9 +65,9 @@ class AccountsController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
-            Accounts::create([
+            $account = Account::create([
                 'shop_id'           => getUser()->shop_id,
                 'user_id'           => getUser()->id,
                 'name'              => $data['name'],
@@ -72,6 +80,7 @@ class AccountsController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Account added successfully',
+                'url' => route('accounts.show',$account->id),
             ]);
         }catch(Exception $e){
             DB::rollBack();
@@ -85,33 +94,33 @@ class AccountsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Accounts  $accounts
+     * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function show(Accounts $accounts)
+    public function show(Account $account)
     {
-        return response(view('accounts.show',compact('accounts')));
+        return response(view('account.show',compact('account')));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Accounts  $accounts
+     * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function edit(Accounts $accounts)
+    public function edit(Account $account)
     {
-        return response(view('accounts.edit',compact('accounts')));
+        return response(view('account.edit',compact('account')));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Accounts  $accounts
+     * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Accounts $accounts)
+    public function update(Request $request, Account $account)
     {
         $data = Validator::make($request->all(),[
             'name'              => 'required|string|min:3|max:30',
@@ -129,20 +138,21 @@ class AccountsController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
-            $accounts->user_id          = getUser()->id;
-            $accounts->name             = $data['name'];
-            $accounts->initial_balance  = $data['initial_balance'];
-            $accounts->balance          = $data['balance'];
+            $account->user_id          = getUser()->id;
+            $account->name             = $data['name'];
+            $account->initial_balance  = $data['initial_balance'];
+            $account->balance          = $data['balance'];
 
-            $accounts->save();
+            $account->save();
 
             DB::commit();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Account updated successfully',
+                'url' => route('accounts.show',$account->id),
             ]);
         }catch(Exception $e){
             DB::rollBack();
@@ -156,10 +166,10 @@ class AccountsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Accounts  $accounts
+     * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Accounts $accounts, Request $request)
+    public function destroy(Account $account, Request $request)
     {
         $data = Validator::make($request->all(),[
             'password' => 'required|min:8|max:20',
@@ -175,16 +185,17 @@ class AccountsController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
             if(Hash::check($data['password'],getUser()->password)){
-                $accounts->delete();
+                $account->delete();
 
                 DB::commit();
 
                 return response()->json([
                     'status'    => 'success',
                     'message'   => 'Account deleted successfully',
+                    'url' => route('accounts.index'),
                 ]);
             }
 
