@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Exception;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -16,14 +17,44 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($category_id=null, $name=null, $status=null)
+    public function index(Request $request)
     {
-        $products = Product::where('category_id',$category_id)
-                            ->where('name',$name)
-                            ->where('status',$status)
-                            ->where('shop_id',getUser()->shop_id)
+        $categories = Category::all();
+        if(array_key_exists('search',$request->all())){
+
+            if(strcmp($request->status,'all')==0){
+                $status = ['pending','active','deleted','banned','restricted'];
+            }
+            else{
+                $status = [$request->status];
+            }
+
+            if(strcmp($request->category_id,'all')==0){
+                $categories_id = array();
+
+                foreach($categories as $category){
+                    array_push($categories_id,$category->id);
+                }
+            }
+            else{
+                $categories_id = [$request->category_id];
+            }
+
+            $products = Product::where('name','like','%'.$request->search.'%')
+                                    ->whereIn('status',$status)
+                                    ->whereIn('category_id',$categories_id)
+                                    ->where('shop_id',getUser()->shop_id)
+                                    ->orderBy('status')
+                                    ->orderBy('name')
+                                    ->get();
+
+            return response(view('product.search',compact('products','categories')));
+        }
+        $products = Product::where('shop_id',getUser()->shop_id)
+                            ->orderBy('status')
+                            ->orderBy('name')
                             ->get();
-        return response(view('product.index',compact('products')));
+        return response(view('product.index',compact('products','categories')));
     }
 
     /**
@@ -33,7 +64,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return response(view('product.create'));
+        $categories = Category::all();
+        return response(view('product.create',compact('categories')));
     }
 
     /**
@@ -48,7 +80,7 @@ class ProductController extends Controller
             'category_id'       => 'required',
             'name'              => 'required|string|min:3|max:20',
             'status'            => 'required|string',
-            'picture'           => 'nullable|string',
+            'picture'           => 'nullable:picture,string|image|mimes:jpeg,jpg,gif,svg|max:2048',
             'initial_inventory' => 'required|numeric',
             'purchase_price'    => 'required|numeric',
             'selling_price'     => 'required|numeric',
@@ -64,27 +96,36 @@ class ProductController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
-            Product::create([
+            $product = Product::create([
                 'shop_id'               => getUser()->shop_id,
                 'user_id'               => getUser()->id,
                 'category_id'           => $data['category_id'],
                 'name'                  => $data['name'],
                 'status'                => $data['status'],
-                'picture'               => $data['picture'],
                 'initial_inventory'     => $data['initial_inventory'],
-                'current_inventory'     => $data['current_inventory'],
+                'current_inventory'     => $data['initial_inventory'],
                 'purchase_price'        => $data['purchase_price'],
-                'avg_purchase_price'    => $data['avg_purchase_price'],
+                'avg_purchase_price'    => $data['purchase_price'],
                 'selling_price'         => $data['selling_price'],
             ]);
+
+            if(array_key_exists('picture',$data)){
+                $imageName = time().'.'.$data['picture']->extension();
+
+                $data['picture']->move(public_path('images'),$imageName);
+
+                $product->picture = $imageName;
+                $product->save();
+            }
 
             DB::commit();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Product added successfully',
+                'url' => route('products.show',$product->id)
             ]);
         }catch(Exception $e){
             return response()->json([
@@ -100,13 +141,8 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product, Request $request)
+    public function show(Product $product)
     {
-        if($request->dataType !== null){
-            return response()->json([
-                'product' => $product,
-            ]);
-        }
         return response(view('product.show',compact('product')));
     }
 
@@ -118,7 +154,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return response(view('product.edit',compact('product')));
+        $categories = Category::all();
+        return response(view('product.edit',compact('product','categories')));
     }
 
     /**
@@ -134,7 +171,6 @@ class ProductController extends Controller
             'category_id'           => 'required',
             'name'                  => 'required|string|min:3|max:20',
             'status'                => 'required|string',
-            'picture'               => 'nullable|string',
             'initial_inventory'     => 'required|numeric',
             'current_inventory'     => 'required|numeric',
             'purchase_price'        => 'required|numeric',
@@ -152,18 +188,25 @@ class ProductController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
             $product->user_id               = getUser()->id;
             $product->category_id           = $data['category_id'];
             $product->name                  = $data['name'];
             $product->status                = $data['status'];
-            $product->picture               = $data['picture'];
             $product->initial_inventory     = $data['initial_inventory'];
             $product->current_inventory     = $data['current_inventory'];
             $product->purchase_price        = $data['purchase_price'];
             $product->avg_purchase_price    = $data['avg_purchase_price'];
             $product->selling_price         = $data['selling_price'];
+
+            // if(array_key_exists('picture',$data) && strcmp() !== 0){
+            //     $imageName = time().'.'.$data['picture']->extension();
+            //     $data['picture']->move(public_path('images'),$imageName);
+            //     $product->picture = $imageName;
+            // }
+
+            // var_dump($data['picture']->getOriginalName());
 
             $product->save();
 
@@ -172,6 +215,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Product updated successfully',
+                'url' => route('products.show',$product->id)
             ]);
         }catch(Exception $e){
             DB::rollBack();
@@ -204,7 +248,7 @@ class ProductController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
             if(Hash::check($data['password'],getUser()->password)){
                 $product->delete();
@@ -214,6 +258,7 @@ class ProductController extends Controller
                 return response()->json([
                     'status'    => 'success',
                     'message'   => 'Product deleted successfully',
+                    'url' => route('products.index')
                 ]);
             }
 

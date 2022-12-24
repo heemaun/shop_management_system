@@ -1,1 +1,54 @@
-/*# sourceMappingURL=index.css.map */
+.products-index {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  gap: 0.5rem;
+}
+.products-index .top {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+.products-index .top :nth-child(1) {
+  flex-grow: 10;
+}
+.products-index .top :nth-child(2) {
+  flex-grow: 2;
+}
+.products-index .top .columns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+.products-index .table-container {
+  width: 100%;
+}
+.products-index .table-container .index-error {
+  color: red;
+}
+.products-index .table-container table thead {
+  text-align: center;
+  font-size: 1.2rem;
+}
+.products-index .table-container table thead th {
+  background: black;
+  color: white;
+}
+.products-index .table-container table tbody .clickable {
+  cursor: pointer;
+}
+.products-index .table-container table tbody .clickable td {
+  text-align: center;
+  vertical-align: middle;
+}
+.products-index .table-container table tbody .clickable td img {
+  max-width: 150px;
+  max-height: 100px;
+}/*# sourceMappingURL=index.css.map */

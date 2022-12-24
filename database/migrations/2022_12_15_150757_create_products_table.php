@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->string('name');
-            $table->enum('status',['pending','active','deleted','banned','restricted'])->default('pending');
+            $table->enum('status',['active','pending','deleted','banned','restricted'])->default('pending');
             $table->string('picture')->nullable();
             $table->float('initial_inventory')->default(0);
             $table->float('current_inventory')->default(0);

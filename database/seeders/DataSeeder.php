@@ -120,7 +120,7 @@ class DataSeeder extends Seeder
                 'user_id' => 1,
                 'category_id' => rand(1,5),
                 'name' => 'Product '.($x+1),
-                'status' => 'active',
+                'status' => $status[rand(0,4)],
                 'picture' => 'product_'.rand(1,7).'.jpg',
             ]);
         }

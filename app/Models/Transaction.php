@@ -18,6 +18,7 @@ class Transaction extends Model
         'to_account',
         'from_user',
         'to_user',
+        'status',
         'from_select',
         'to_select',
         'amount'

@@ -1,0 +1,60 @@
+.products-create{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 90vh;
+    overflow-y: auto;
+
+    form{
+        background: black;
+        color: white;
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 1rem;
+        width: 75%;
+
+        .rows{
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 1rem;
+            width: 100%;
+
+            .columns{
+                display: flex;
+                flex-flow: column;
+                justify-content: center;
+                align-items: flex-start;
+                width: 50%;
+
+                img{
+                    width: 100%;
+                    height: auto;
+                    max-width: 300px;
+                    max-height: 300px;
+                    object-fit: cover;
+                    cursor: pointer;
+                    padding: .5rem;
+                    border: .1rem solid white;
+                    border-radius: .5rem;
+                }
+
+                span{
+                    color: red;
+                    margin-bottom: .5rem;
+                }
+            }
+        }
+
+        .btn-container{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+}

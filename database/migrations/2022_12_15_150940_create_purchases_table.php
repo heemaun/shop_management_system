@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('customer_id')->nullable()->references('id')->on('users')->onDelete('cascade');
-            $table->enum('status',['pending','active','deleted','banned','restricted'])->default('pending');
+            $table->enum('status',['active','pending','deleted','banned','restricted'])->default('pending');
             $table->float('total_price');
             $table->float('total_product_count');
             $table->float('total_order_count');

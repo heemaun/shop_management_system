@@ -14,6 +14,21 @@
         justify-content: center;
         align-items: center;
         gap: .5rem;
+
+        :nth-child(1){
+            flex-grow: 10;
+        }
+
+        :nth-child(2){
+            flex-grow: 2;
+        }
+
+        .columns{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .5rem;
+        }
     }
 
     .table-container{

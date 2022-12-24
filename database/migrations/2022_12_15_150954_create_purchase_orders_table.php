@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('purchase_id')->references('id')->on('purchases')->onDelete('cascade');
             $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->enum('status',['pending','active','deleted','banned','restricted'])->default('pending');
+            $table->enum('status',['active','pending','deleted','banned','restricted'])->default('pending');
             $table->float('units')->default(0);
             $table->float('unit_price')->default(0);
             $table->float('subtotal')->default(0);

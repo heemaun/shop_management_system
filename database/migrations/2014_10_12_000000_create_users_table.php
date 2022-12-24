@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('user_name')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('status',['pending','active','deleted','banned','restricted'])->default('pending');
+            $table->enum('status',['active','pending','deleted','banned','restricted'])->default('pending');
             $table->enum('gender',['male','female','other']);
             $table->enum('role',['super_admin','admin','manager','seller','customer']);
             $table->integer('salary')->nullable();
