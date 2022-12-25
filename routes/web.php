@@ -49,5 +49,6 @@ Route::resource('/transactions',TransactionController::class);
 Route::resource('/users',UserController::class);
 
 // specialized resource routes
-Route::post('change-password',[UserController::class,'changePassword'])->name('change-password');
+Route::post('/change-password',[UserController::class,'changePassword'])->name('change-password');
+Route::post('/products-change-image/{product}',[ProductController::class,'changeProductImage'])->name('products.change-image');
 ?>

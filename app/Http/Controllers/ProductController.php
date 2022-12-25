@@ -7,6 +7,7 @@ use Exception;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -80,7 +81,7 @@ class ProductController extends Controller
             'category_id'       => 'required',
             'name'              => 'required|string|min:3|max:20',
             'status'            => 'required|string',
-            'picture'           => 'nullable:picture,string|image|mimes:jpeg,jpg,gif,svg|max:2048',
+            'picture'           => 'nullable:picture,string|image|mimes:jpeg,jpg,gif,svg,png|max:2048',
             'initial_inventory' => 'required|numeric',
             'purchase_price'    => 'required|numeric',
             'selling_price'     => 'required|numeric',
@@ -215,6 +216,54 @@ class ProductController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Product updated successfully',
+                'url' => route('products.show',$product->id)
+            ]);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status'    => 'exception',
+                'message'   => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function changeProductImage(Request $request, Product $product)
+    {
+        // return response()->json([
+        //     'product' => $product,
+        //     'request' => $request->all(),
+        // ]);
+
+        $data = Validator::make($request->all(),[
+            'picture' => 'nullable:picture,string|image|mimes:jpeg,jpg,gif,svg,png|max:2048',
+        ]);
+
+        if($data->fails()){
+            return response()->json([
+                'status' => 'errors',
+                'errors' => $data->errors(),
+            ]);
+        }
+
+        DB::beginTransaction();
+
+        try{
+            $data = $data->validate();
+
+            // unlink('assets/images/'.$product->picture);
+            File::delete(public_path('images/'.$product->picture));
+
+            $imageName = time().'.'.$data['picture']->extension();
+            $data['picture']->move(public_path('images'),$imageName);
+            $product->picture = $imageName;
+
+            $product->save();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Product picture updated successfully',
                 'url' => route('products.show',$product->id)
             ]);
         }catch(Exception $e){

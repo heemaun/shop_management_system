@@ -10,6 +10,12 @@
     <div class="details">
         <div class="columns">
             <img src="{{ (empty($product->picture))?asset('images/temp_product_img.png'):asset('images/'.$product->picture) }}" alt="product image">
+            <button id="products_show_change_image" class="btn btn-outline-primary hide">Change Image</button>
+            <form action="{{ route('products.change-image',$product->id) }}" method="POST" id="show_product_change_image_form" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name="picture" id="products_show_change_image_file" accept="image/*" hidden>
+                <button type="submit" class="btn btn-primary">Save Image</button>
+            </form>
         </div>
 
         <div class="columns">
@@ -43,4 +49,9 @@
             <button type="button" id="products_delete_close" class="btn btn-secondary">Close</button>
         </div>
     </form>
+</div>
+
+<div id="product_show_image_viewer" class="product-show-image-viewer hide">
+    <img src="" alt="">
+    <span id="product_show_image_viewer_close"><i class="fa-solid fa-x"></i></span>
 </div>
