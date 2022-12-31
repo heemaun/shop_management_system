@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Settings;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -124,5 +125,26 @@ class DataSeeder extends Seeder
                 'picture' => 'product_'.rand(1,7).'.jpg',
             ]);
         }
+
+        Settings::create([
+            'shop_id' => 1,
+            'user_id' => 2,
+            'key' => 'Shop Name',
+            'value' => "Zamans' Cafe"
+        ]);
+
+        Settings::create([
+            'shop_id' => 1,
+            'user_id' => 3,
+            'key' => 'Tag Line',
+            'value' => 'best cafe of the town'
+        ]);
+
+        Settings::create([
+            'shop_id' => 1,
+            'user_id' => 4,
+            'key' => 'Banner Image',
+            'value' => 'main_bg.jpg',
+        ]);
     }
 }

@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Shop Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{ asset('css/system/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/system/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('css/font-awesome/all.min.css') }}">
 
     @if (checkLogin())
@@ -65,7 +65,6 @@
         <link rel="stylesheet" href="{{ asset('css/sell-order/index.css') }}">
         <link rel="stylesheet" href="{{ asset('css/sell-order/show.css') }}">
 
-        <link rel="stylesheet" href="{{ asset('css/settings/create.css') }}">
         <link rel="stylesheet" href="{{ asset('css/settings/edit.css') }}">
         <link rel="stylesheet" href="{{ asset('css/settings/index.css') }}">
         <link rel="stylesheet" href="{{ asset('css/settings/show.css') }}">
@@ -294,10 +293,9 @@
         </section>
     @endif
 
-    <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('js/system/jquery.js') }}"></script>
+    <script src="{{ asset('js/system/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/system/toastr.js') }}"></script>
     <script src="{{ asset('js/font-awesome/all.min.js') }}"></script>
 
     <script src="{{ asset('js/system/index.js') }}"></script>
@@ -339,7 +337,6 @@
     <script src="{{ asset('js/sell-order/index.js') }}"></script>
     <script src="{{ asset('js/sell-order/show.js') }}"></script>
 
-    <script src="{{ asset('js/settings/create.js') }}"></script>
     <script src="{{ asset('js/settings/edit.js') }}"></script>
     <script src="{{ asset('js/settings/index.js') }}"></script>
     <script src="{{ asset('js/settings/show.js') }}"></script>

@@ -43,7 +43,7 @@ Route::resource('/purchases',PurchaseOrderController::class);
 Route::resource('/purchase-orders',PurchaseOrderController::class);
 Route::resource('/sells',SellController::class);
 Route::resource('/sell-orders',SellOrderController::class);
-Route::resource('/settings',SettingsController::class);
+Route::resource('/settings',SettingsController::class)->only('index');
 Route::resource('/shops',ShopController::class);
 Route::resource('/transactions',TransactionController::class);
 Route::resource('/users',UserController::class);
@@ -51,4 +51,6 @@ Route::resource('/users',UserController::class);
 // specialized resource routes
 Route::post('/change-password',[UserController::class,'changePassword'])->name('change-password');
 Route::post('/products-change-image/{product}',[ProductController::class,'changeProductImage'])->name('products.change-image');
+Route::get('/settings/{settings}/edit',[SettingsController::class,'edit'])->name('settings.edit');
+Route::post('/settings/{settings}/update',[SettingsController::class,'update'])->name('settings.update');
 ?>

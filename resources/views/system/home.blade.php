@@ -1,9 +1,9 @@
 <div class="home">
     <main>
-        <img src="{{ asset('images/main_bg.jpg') }}" alt="main-image">
+        <img src="{{ asset('images/'.getSettingsValue('Banner Image')) }}" alt="main-image">
         <div class="headline">
-            <h1>Zamans' Cafe</h1>
-            <p>Best cafe of the town</p>
+            <h1>{{ getSettingsValue('Shop Name') }}</h1>
+            <p>{{ getSettingsValue('Tag Line') }}</p>
         </div>
     </main>
 
@@ -17,7 +17,11 @@
                 <div class="product" data-href="{{ route('products.show',$product->id) }}">
 
                     <span class="name">{{ $product->name }}</span>
+                    @if (strcmp($product->picture,'')==0)
+                    <img src="{{ asset('images/temp_product_img.png') }}" alt="Temp Image">
+                    @else
                     <img src="{{ asset('images/'.$product->picture) }}" alt="no image">
+                    @endif
                     <span class="price">{{ $product->selling_price }} Tk</span>
                     @if (checkLogin())
                     <a href="{{ route('products.show',$product->id) }}" class="btn btn-outline-primary hide">Add to cart</a>

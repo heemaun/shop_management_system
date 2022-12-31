@@ -17,15 +17,10 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-
         $data = Validator::make($request->all(),[
             'user_name' => 'required|min:3',
             'password' => 'required|min:8|max:20',
         ]);
-        // return response()->json([
-        //     'status' => 'errors',
-        //     'errors' => $request->all(),
-        // ]);
 
         if($data->fails()){
             return response()->json([

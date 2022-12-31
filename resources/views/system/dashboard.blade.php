@@ -22,9 +22,6 @@
             <div class="content">
                 <ul>
                     <li><a href="{{ route('settings.index') }}">Index</a></li>
-                    @if (checkSuperAdmin())
-                    <li><a href="{{ route('settings.create') }}">Create</a></li>
-                    @endif
                 </ul>
             </div>
         </div>
