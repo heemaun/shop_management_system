@@ -1,7 +1,7 @@
 <div id="accounts_create" class="accounts-create">
     <form action="{{ route('accounts.store') }}" method="POST" id="accounts_create_form">
         @csrf
-        
+
         <legend>Create New Account</legend>
         <label for="accounts_create_name" class="form-label">Name</label>
         <input type="text" name="name" id="accounts_create_name" placeholder="enter account name" class="form-control">

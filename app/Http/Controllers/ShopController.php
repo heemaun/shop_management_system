@@ -16,10 +16,17 @@ class ShopController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($name = null)
+    public function index(Request $request)
     {
-        $shops = Shop::where('name',$name)
-                            ->get();
+        if(array_key_exists('search',$request->all())){
+            $shops = Shop::where('shop_name','like','%'.$request->search.'%')
+                                    ->orderBy('shop_name')
+                                    ->get();
+
+            return response(view('shop.search',compact('shops')));
+        }
+        $shops = Shop::orderBy('shop_name')
+                        ->get();
         return response(view('shop.index',compact('shops')));
     }
 
@@ -42,7 +49,7 @@ class ShopController extends Controller
     public function store(Request $request)
     {
         $data = Validator::make($request->all(),[
-            'name' => 'required|string|min:3|max:20',
+            'shop_name' => 'required|string|min:3|max:20',
         ]);
 
         if($data->fails()){
@@ -55,10 +62,10 @@ class ShopController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
-            Shop::create([
-                'name' => $data['name'],
+            $shop = Shop::create([
+                'shop_name' => $data['shop_name'],
             ]);
 
             DB::commit();
@@ -66,6 +73,7 @@ class ShopController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Shop added successfully',
+                'url' => route('shops.show',$shop->id),
             ]);
         }catch(Exception $e){
             return response()->json([
@@ -107,7 +115,7 @@ class ShopController extends Controller
     public function update(Request $request, Shop $shop)
     {
         $data = Validator::make($request->all(),[
-            'name' => 'required|string|min:3|max:20',
+            'shop_name' => 'required|string|min:3|max:20',
         ]);
 
         if($data->fails()){
@@ -120,9 +128,9 @@ class ShopController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
-            $shop->name                  = $data['name'];
+            $shop->shop_name = $data['shop_name'];
 
             $shop->save();
 
@@ -131,6 +139,7 @@ class ShopController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Shop updated successfully',
+                'url' => route('shops.show',$shop->id),
             ]);
         }catch(Exception $e){
             DB::rollBack();
@@ -163,7 +172,7 @@ class ShopController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
             if(Hash::check($data['password'],getUser()->password)){
                 $shop->delete();
@@ -173,6 +182,7 @@ class ShopController extends Controller
                 return response()->json([
                     'status'    => 'success',
                     'message'   => 'Shop deleted successfully',
+                    'url'       => route('shops.index'),
                 ]);
             }
 

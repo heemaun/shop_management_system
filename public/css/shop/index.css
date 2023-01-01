@@ -1,1 +1,26 @@
-/*# sourceMappingURL=index.css.map */
+.shops-index {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  gap: 0.5rem;
+}
+.shops-index .top {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+.shops-index .table-container {
+  width: 100%;
+}
+.shops-index .table-container .index-error {
+  color: red;
+}
+.shops-index .table-container table tbody .clickable {
+  cursor: pointer;
+}/*# sourceMappingURL=index.css.map */
