@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('status',['active','pending','deleted','banned','restricted'])->default('pending');
             $table->enum('gender',['male','female','other']);
-            $table->enum('role',['super_admin','admin','manager','seller','customer']);
+            $table->enum('role',['super_admin','admin','manager','seller','customer'])->default('customer');
             $table->integer('salary')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('picture')->nullable();

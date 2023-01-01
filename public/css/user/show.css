@@ -1,1 +1,80 @@
-/*# sourceMappingURL=show.css.map */
+.users-show .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+.users-show .image {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  border: 0.1rem solid red;
+}
+.users-show .image button {
+  position: absolute;
+  transform: translateX(0.6rem) translateY(0.6rem);
+}
+.users-show .image form {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+.users-show .image img {
+  max-height: 30vh;
+  -o-object-fit: cover;
+     object-fit: cover;
+  padding: 0.5rem;
+  border: 0.1rem solid gray;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+.users-show .details {
+  padding: 0rem 1rem;
+}
+.users-show .details label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.1rem dashed gray;
+  font-style: italic;
+}
+.users-show .details label span {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.users-delete {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+.users-delete form {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: flex-start;
+  background: black;
+  color: white;
+  max-width: 50%;
+  padding: 1rem;
+}
+.users-delete form span {
+  margin-bottom: 0.5rem;
+  color: red;
+}
+.users-delete form .btn-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}/*# sourceMappingURL=show.css.map */

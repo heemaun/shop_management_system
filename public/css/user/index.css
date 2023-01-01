@@ -1,1 +1,38 @@
-/*# sourceMappingURL=index.css.map */
+.users-index {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  gap: 0.5rem;
+}
+.users-index .top {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+.users-index .top :nth-child(1) {
+  flex-grow: 10;
+}
+.users-index .top :nth-child(2) {
+  flex-grow: 2;
+}
+.users-index .top .columns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+.users-index .table-container {
+  width: 100%;
+}
+.users-index .table-container .index-error {
+  color: red;
+}
+.users-index .table-container table tbody .clickable {
+  cursor: pointer;
+}/*# sourceMappingURL=index.css.map */

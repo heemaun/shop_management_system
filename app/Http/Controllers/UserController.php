@@ -6,6 +6,7 @@ use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,13 +17,48 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($key = null, $status = null)
+    public function index(Request $request)
     {
-        $users = User::where('email',$key)
-                        ->orWhere('name',$key)
-                        ->orWhere('phone',$key)
-                        ->where('status',$status)
-                        ->where('shop_id',getUser()->shop_id)
+        if(array_key_exists('search',$request->all())){
+
+            if(strcmp($request->status,'all')==0){
+                $status = ['pending','active','deleted','banned','restricted'];
+            }
+            else{
+                $status = [$request->status];
+            }
+
+            if(strcmp($request->role,'all')==0){
+                if(checkSuperAdmin()){
+                    $roles = ['super_admin','admin','manager','seller','customer'];
+                }
+                else if(checkAdmin()){
+                    $roles = ['admin','manager','seller','customer'];
+                }
+                else{
+                    $roles = ['seller','customer'];
+                }
+            }
+            else{
+                $roles = [$request->role];
+            }
+
+            $users = User::where('name','LIKE','%'.$request->search.'%')
+                            ->whereIn('status',$status)
+                            ->whereIn('role',$roles)
+                            ->where('shop_id',getUser()->shop_id)
+                            ->orderBy('role')
+                            ->orderBy('status')
+                            ->orderBy('name')
+                            ->get();
+
+                            return response(view('user.search',compact('users')));
+
+                        }
+        $users = User::where('shop_id',getUser()->shop_id)
+                        ->orderBy('role')
+                        ->orderBy('status')
+                        ->orderBy('name')
                         ->get();
         return response(view('user.index',compact('users')));
     }
@@ -45,18 +81,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
+        // return response()->json([
+        //     'status' => 'errors',
+        //     'errors' => $request->all(),
+        // ]);
         $data = Validator::make($request->all(),[
             'name'          => 'required|string|min:3|max:30',
             'email'         => 'required|email|unique:users,email',
             'phone'         => 'required|numeric|unique:users,phone',
             'user_name'     => 'required|unique:users,user_name',
-            'password'      => 'required|string|min:8|max:20',
-            // 'status'        => 'required',
+            // 'password'      => 'required|string|min:8|max:20',
+            'status'        => 'nullable',
+            'role'          => 'nullable',
             'gender'        => 'required',
             'salary'        => 'nullable|numeric',
             'date_of_birth' => 'nullable|date|date_format:Y-m-d',
-            'picture'       => 'nullable|string',
+            'picture'       => 'nullable:picture,string|image|mimes:jpeg,jpg,gif,svg,png|max:2048',
             'address'       => 'required|string',
         ]);
 
@@ -73,26 +113,47 @@ class UserController extends Controller
         try{
             $data = $data->validate();
 
-            User::create([
-                'shop_id'       => 1,
+            $user = User::create([
+                'shop_id'       => (getUser() !== null) ? getUser()->shop_id : 1,
                 'name'          => $data['name'],
                 'email'         => $data['email'],
                 'phone'         => $data['phone'],
                 'user_name'     => $data['user_name'],
-                'password'      => Hash::make($data['password']),
-                'status'        => 'pending',
+                'password'      => Hash::make('11111111'),
                 'gender'        => $data['gender'],
-                'salary'        => 0,
                 'date_of_birth' => $data['date_of_birth'],
                 'picture'       => "",
                 'address'       => $data['address'],
             ]);
 
+            if(array_key_exists('status',$data)){
+                $user->status = $data['status'];
+            }
+
+            if(array_key_exists('role',$data)){
+                $user->role = $data['role'];
+            }
+
+            if(array_key_exists('salary',$data)){
+                $user->salary = $data['salary'];
+            }
+
+            if(array_key_exists('picture',$data)){
+                $imageName = time().'.'.$data['picture']->extension();
+
+                $data['picture']->move(public_path('images'),$imageName);
+
+                $user->picture = $imageName;
+            }
+
+            $user->save();
+
             DB::commit();
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'User added successfully',
+                'status'    => 'success',
+                'message'   => 'User added successfully',
+                'url'       => route('users.show',$user->id),
             ]);
         }catch(Exception $e){
             return response()->json([
@@ -110,7 +171,6 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response($user);
         return response(view('user.show',compact('user')));
     }
 
@@ -139,12 +199,12 @@ class UserController extends Controller
             'email'         => 'required|email|unique:users,email',
             'phone'         => 'required|numeric|unique:users,phone',
             'user_name'     => 'required|unique:users,user_name',
-            'password'      => 'required|string|min:8|max:20',
+            // 'password'      => 'required|string|min:8|max:20',
             'status'        => 'required',
             'gender'        => 'required',
             'salary'        => 'nullable|numeric',
             'date_of_birth' => 'nullable|date',
-            'picture'       => 'nullable|string',
+            // 'picture'       => 'nullable|string',
             'address'       => 'required|text',
         ]);
 
@@ -164,12 +224,12 @@ class UserController extends Controller
             $user->email            = $data['email'];
             $user->phone            = $data['phone'];
             $user->user_name        = $data['user_name'];
-            $user->password         = Hash::make($data['password']);
+            // $user->password         = Hash::make($data['password']);
             $user->status           = $data['status'];
             $user->gender           = $data['gender'];
             $user->salary           = $data['salary'];
             $user->date_of_birth    = $data['date_of_birth'];
-            $user->picture          = $data['picture'];
+            // $user->picture          = $data['picture'];
             $user->address          = $data['address'];
 
             $user->save();
@@ -177,8 +237,51 @@ class UserController extends Controller
             DB::commit();
 
             return response()->json([
+                'status'    => 'success',
+                'message'   => 'User updated successfully',
+                'url'       => route('users.show',$user->id),
+            ]);
+        }catch(Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'status'    => 'exception',
+                'message'   => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function changeUserImage(Request $request, User $user)
+    {
+        $data = Validator::make($request->all(),[
+            'picture' => 'nullable:picture,string|image|mimes:jpeg,jpg,gif,svg,png|max:2048',
+        ]);
+
+        if($data->fails()){
+            return response()->json([
+                'status' => 'errors',
+                'errors' => $data->errors(),
+            ]);
+        }
+
+        DB::beginTransaction();
+
+        try{
+            $data = $data->validate();
+
+            File::delete(public_path('images/'.$user->picture));
+
+            $imageName = time().'.'.$data['picture']->extension();
+            $data['picture']->move(public_path('images'),$imageName);
+            $user->picture = $imageName;
+
+            $user->save();
+
+            DB::commit();
+
+            return response()->json([
                 'status' => 'success',
-                'message' => 'User updated successfully',
+                'message' => 'User picture updated successfully',
+                'url' => route('users.show',$user->id)
             ]);
         }catch(Exception $e){
             DB::rollBack();
@@ -221,6 +324,7 @@ class UserController extends Controller
                 return response()->json([
                     'status'    => 'success',
                     'message'   => 'User deleted successfully',
+                    'url'       => route('users.index'),
                 ]);
             }
 

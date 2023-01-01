@@ -51,6 +51,7 @@ Route::resource('/users',UserController::class);
 // specialized resource routes
 Route::post('/change-password',[UserController::class,'changePassword'])->name('change-password');
 Route::post('/products-change-image/{product}',[ProductController::class,'changeProductImage'])->name('products.change-image');
+Route::post('/products-change-image/{user}',[UserController::class,'changeUserImage'])->name('users.change-image');
 Route::get('/settings/{settings}/edit',[SettingsController::class,'edit'])->name('settings.edit');
 Route::post('/settings/{settings}/update',[SettingsController::class,'update'])->name('settings.update');
 ?>

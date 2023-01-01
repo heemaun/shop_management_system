@@ -61,45 +61,9 @@
                 </ul>
             </div>
         </div>
-        @endif
-
-        @if (checkSuperAdmin() || checkAdmin())
-        <div class="collapseable">
-            <label for="" class="click">Admin<span><i class="fa-solid fa-chevron-down"></i></span></label>
-            <div class="content">
-                <ul>
-                    <li><a href="{{ route('users.index') }}">Index</a></li>
-                    <li><a href="{{ route('users.create') }}">Create</a></li>
-                </ul>
-            </div>
-        </div>
 
         <div class="collapseable">
-            <label for="" class="click">Manager<span><i class="fa-solid fa-chevron-down"></i></span></label>
-            <div class="content">
-                <ul>
-                    <li><a href="{{ route('users.index') }}">Index</a></li>
-                    @if (checkSuperAdmin() || checkAdmin())
-                    <li><a href="{{ route('users.create') }}">Create</a></li>
-                    @endif
-                </ul>
-            </div>
-        </div>
-        @endif
-
-        @if (checkSuperAdmin() || checkAdmin() || checkManager())
-        <div class="collapseable">
-            <label for="" class="click">Seller<span><i class="fa-solid fa-chevron-down"></i></span></label>
-            <div class="content">
-                <ul>
-                    <li><a href="{{ route('users.index') }}">Index</a></li>
-                    <li><a href="{{ route('users.create') }}">Create</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="collapseable">
-            <label for="" class="click">Customer<span><i class="fa-solid fa-chevron-down"></i></span></label>
+            <label for="" class="click">Users<span><i class="fa-solid fa-chevron-down"></i></span></label>
             <div class="content">
                 <ul>
                     <li><a href="{{ route('users.index') }}">Index</a></li>

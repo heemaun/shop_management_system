@@ -201,14 +201,6 @@ class ProductController extends Controller
             $product->avg_purchase_price    = $data['avg_purchase_price'];
             $product->selling_price         = $data['selling_price'];
 
-            // if(array_key_exists('picture',$data) && strcmp() !== 0){
-            //     $imageName = time().'.'.$data['picture']->extension();
-            //     $data['picture']->move(public_path('images'),$imageName);
-            //     $product->picture = $imageName;
-            // }
-
-            // var_dump($data['picture']->getOriginalName());
-
             $product->save();
 
             DB::commit();
@@ -229,11 +221,6 @@ class ProductController extends Controller
 
     public function changeProductImage(Request $request, Product $product)
     {
-        // return response()->json([
-        //     'product' => $product,
-        //     'request' => $request->all(),
-        // ]);
-
         $data = Validator::make($request->all(),[
             'picture' => 'nullable:picture,string|image|mimes:jpeg,jpg,gif,svg,png|max:2048',
         ]);
