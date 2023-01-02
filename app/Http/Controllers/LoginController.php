@@ -40,6 +40,26 @@ class LoginController extends Controller
             ]);
         }
 
+        if(strcmp($user->status,'active') !== 0){
+            $message = '';
+            if(strcmp($user->status,'pending') == 0){
+                $message = 'Please verify your email';
+            }
+            else if(strcmp($user->status,'deleted') == 0){
+                $message = 'Your account has been deleted';
+            }
+            else if(strcmp($user->status,'banned') == 0){
+                $message = 'Your account has been banned';
+            }
+            else{
+                $message = 'Your account has been restricted';
+            }
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+            ]);
+        }
+
         if(!Hash::check($data['password'],$user->password)){
             return response()->json([
                 'status' => 'error',

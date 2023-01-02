@@ -14,7 +14,29 @@
   justify-content: center;
   align-items: flex-start;
   padding: 1rem;
+  min-width: 500px;
+  max-width: 90%;
+}
+.users-edit form .rows {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+  width: 100%;
+}
+.users-edit form .rows .columns {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: flex-start;
   width: 50%;
+}
+.users-edit form .rows .columns textarea {
+  height: 7.25rem;
+}
+.users-edit form .rows .columns span {
+  color: red;
+  margin-bottom: 0.5rem;
 }
 .users-edit form span {
   color: red;

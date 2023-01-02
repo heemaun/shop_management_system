@@ -15,7 +15,34 @@
         align-items: flex-start;
         padding: 1rem;
         // gap: .5rem;
-        width: 50%;
+        min-width: 500px;
+        max-width: 90%;
+
+        .rows{
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 1rem;
+            width: 100%;
+
+            .columns{
+                display: flex;
+                flex-flow: column;
+                justify-content: center;
+                align-items: flex-start;
+                width: 50%;
+
+                textarea{
+                    height: 7.25rem;
+                }
+
+                span{
+                    color: red;
+                    margin-bottom: .5rem;
+                }
+
+            }
+        }
 
         span{
             color: red;

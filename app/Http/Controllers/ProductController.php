@@ -287,7 +287,9 @@ class ProductController extends Controller
             $data = $data->validate();
 
             if(Hash::check($data['password'],getUser()->password)){
-                $product->delete();
+                $product->status = 'deleted';
+
+                $product->save();
 
                 DB::commit();
 

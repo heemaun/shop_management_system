@@ -30,11 +30,11 @@
             @endif
         @endif
 
-        <button id="users_show_change_image" class="btn btn-outline-primary hide">Change Image</button>
+        <button id="users_show_change_image" class="btn btn-outline-primary change-image hide">Change Image</button>
         <form action="{{ route('users.change-image',$user->id) }}" method="POST" id="show_user_change_image_form" enctype="multipart/form-data">
             @csrf
             <input type="file" name="picture" id="users_show_change_image_file" accept="image/*" hidden>
-            <button type="submit" class="btn btn-primary">Save Image</button>
+            <button type="submit" class="btn btn-primary hide">Save Image</button>
         </form>
     </div>
 
@@ -75,4 +75,9 @@
             <button type="button" id="users_delete_close" class="btn btn-secondary">Close</button>
         </div>
     </form>
+</div>
+
+<div id="user_show_image_viewer" class="user-show-image-viewer hide">
+    <img src="" alt="">
+    <span id="user_show_image_viewer_close"><i class="fa-solid fa-x"></i></span>
 </div>

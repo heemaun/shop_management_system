@@ -14,8 +14,17 @@ $("#content_loader").on("submit","#users_edit_form",function(e){
     e.preventDefault();
     let url = $(this).attr("action");
     let name = $("#users_edit_name").val();
-    let initial_balance = $("#users_edit_initial_balance").val();
-    let balance = $("#users_edit_balance").val();
+    let email = $("#users_edit_email").val();
+    let phone = $("#users_edit_phone").val();
+    let user_name = $("#users_edit_user_name").val();
+    let status = $("#users_edit_status").val();
+    let gender = $("#users_edit_gender").val();
+    let role = $("#users_edit_role").val();
+    let salary = $("#users_edit_salary").val();
+    let date_of_birth = $("#users_edit_date_of_birth").val();
+    let address = $("#users_edit_address").val();
+
+    // console.log(url,name,email,phone,user_name,status,gender,role,salary,date_of_birth,address);
 
     $.ajax({
         url: url,
@@ -23,8 +32,15 @@ $("#content_loader").on("submit","#users_edit_form",function(e){
         dataType: "json",
         data: {
             name: name,
-            initial_balance: initial_balance,
-            balance: balance,
+            email: email,
+            phone: phone,
+            user_name: user_name,
+            status: status,
+            gender: gender,
+            role: role,
+            salary: salary,
+            date_of_birth: date_of_birth,
+            address: address,
         },
         beforeSend: function(){
             $(".users-edit-error").text("");

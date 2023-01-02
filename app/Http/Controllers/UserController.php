@@ -90,7 +90,6 @@ class UserController extends Controller
             'email'         => 'required|email|unique:users,email',
             'phone'         => 'required|numeric|unique:users,phone',
             'user_name'     => 'required|unique:users,user_name',
-            // 'password'      => 'required|string|min:8|max:20',
             'status'        => 'nullable',
             'role'          => 'nullable',
             'gender'        => 'required',
@@ -196,16 +195,14 @@ class UserController extends Controller
     {
         $data = Validator::make($request->all(),[
             'name'          => 'required|string|min:3|max:30',
-            'email'         => 'required|email|unique:users,email',
-            'phone'         => 'required|numeric|unique:users,phone',
-            'user_name'     => 'required|unique:users,user_name',
-            // 'password'      => 'required|string|min:8|max:20',
+            'email'         => 'required|email|unique:users,email,'.$user->id,
+            'phone'         => 'required|numeric|unique:users,phone,'.$user->id,
+            'user_name'     => 'required|unique:users,user_name,'.$user->id,
             'status'        => 'required',
             'gender'        => 'required',
             'salary'        => 'nullable|numeric',
             'date_of_birth' => 'nullable|date',
-            // 'picture'       => 'nullable|string',
-            'address'       => 'required|text',
+            'address'       => 'required|string',
         ]);
 
         if($data->fails()){
@@ -218,18 +215,16 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
             $user->name             = $data['name'];
             $user->email            = $data['email'];
             $user->phone            = $data['phone'];
             $user->user_name        = $data['user_name'];
-            // $user->password         = Hash::make($data['password']);
             $user->status           = $data['status'];
             $user->gender           = $data['gender'];
             $user->salary           = $data['salary'];
             $user->date_of_birth    = $data['date_of_birth'];
-            // $user->picture          = $data['picture'];
             $user->address          = $data['address'];
 
             $user->save();
@@ -314,10 +309,12 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
             if(Hash::check($data['password'],getUser()->password)){
-                $user->delete();
+                $user->status = 'deleted';
+
+                $user->save();
 
                 DB::commit();
 

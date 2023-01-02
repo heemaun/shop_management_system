@@ -195,7 +195,9 @@ class CategoryController extends Controller
             $data = $data->validate();
 
             if(Hash::check($data['password'],getUser()->password)){
-                $category->delete();
+                $category->status = 'deleted';
+
+                $category->save();
 
                 DB::commit();
 

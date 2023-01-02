@@ -1,8 +1,8 @@
 function home()
 {
     $.ajax({
-        // url: "/home",
-        url: "/users",
+        url: "/home",
+        // url: "/users/4",
         type: "GET",
         success: function(response){
             $("#content_loader").html(response);
@@ -202,3 +202,8 @@ $("#dashboard").click(function(e){
         }
     });
 });
+
+toastr.options = {
+    "positionClass": "toast-bottom-left",
+    "progressBar": true,
+}

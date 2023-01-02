@@ -10,9 +10,9 @@
   justify-content: flex-start;
   align-items: center;
   gap: 0.5rem;
-  border: 0.1rem solid red;
+  padding-bottom: 0.5rem;
 }
-.users-show .image button {
+.users-show .image .change-image {
   position: absolute;
   transform: translateX(0.6rem) translateY(0.6rem);
 }
@@ -25,6 +25,8 @@
 }
 .users-show .image img {
   max-height: 30vh;
+  min-height: 200px;
+  min-width: 200px;
   -o-object-fit: cover;
      object-fit: cover;
   padding: 0.5rem;
@@ -77,4 +79,30 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+}
+
+.user-show-image-viewer {
+  position: fixed;
+  top: 0rem;
+  left: 0rem;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user-show-image-viewer img {
+  max-width: 95%;
+  max-height: 95vh;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.user-show-image-viewer span {
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  position: fixed;
+  top: 5rem;
+  right: 5rem;
 }/*# sourceMappingURL=show.css.map */
