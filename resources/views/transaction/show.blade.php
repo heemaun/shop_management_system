@@ -8,55 +8,23 @@
         </div>
     </div>
 
-    <div class="image">
-
-        @if ((strcmp($transaction->picture,'')!==0))
-
-        <img src="{{ asset('images/'.$transaction->picture) }}" alt="Transaction profile picture" id="transactions_show_picture">
-
-        @else
-            @if (strcmp('male',$transaction->gender)==0)
-
-            <img src="{{ asset('images/default_transaction_picture_male.png') }}" alt="Default profile picture" id="transactions_show_picture">
-
-            @elseif (strcmp('female',$transaction->gender)==0)
-
-            <img src="{{ asset('images/default_transaction_picture_female.png') }}" alt="Default profile picture" id="transactions_show_picture">
-
-            @else
-
-            <img src="{{ asset('images/default_transaction_picture_other.png') }}" alt="Default profile picture" id="transactions_show_picture">
-
-            @endif
-        @endif
-
-        <button id="transactions_show_change_image" class="btn btn-outline-primary change-image hide">Change Image</button>
-        <form action="{{ route('transactions.change-image',$transaction->id) }}" method="POST" id="show_transaction_change_image_form" enctype="multipart/form-data">
-            @csrf
-            <input type="file" name="picture" id="transactions_show_change_image_file" accept="image/*" hidden>
-            <button type="submit" class="btn btn-primary hide">Save Image</button>
-        </form>
-    </div>
-
     <div class="details">
-        <label for="" class="form-label"><span>Name: </span>{{ $transaction->name.' ['.ucwords($transaction->role).']' }}</label>
-        <label for="" class="form-label"><span>Email: </span>{{ $transaction->email }}</label>
-        <label for="" class="form-label"><span>Phone: </span>{{ $transaction->phone }}</label>
-        <label for="" class="form-label"><span>Transaction Name: </span>{{ $transaction->transaction_name }}</label>
-        <label for="" class="form-label"><span>Gender: </span>{{ ucwords($transaction->gender) }}</label>
-
-        @if (strcmp($transaction->role,'customer')!==0)
-        <label for="" class="form-label"><span>Salary: </span>{{ $transaction->salary }}</label>
-        @endif
-
-        <label for="" class="form-label"><span>Date of birth: </span>{{ $transaction->date_of_birth }}</label>
-        <label for="" class="form-label"><span>Address: </span>{{ $transaction->address }}</label>
+        <label for="" class="form-label"><span>ID: </span>{{ '#'.$transaction->id }}</label>
         <label for="" class="form-label"><span>Shop Name: </span>{{ $transaction->shop->shop_name }}</label>
-
-        @if (checkSuperAdmin()||checkAdmin())
-        <label for="" class="form-label"><span>Created at: </span>{{ $transaction->created_at->diffForHumans() }}</label>
-        <label for="" class="form-label"><span>Updated at: </span>{{ $transaction->updated_at->diffForHumans() }}</label>
+        <label for="" class="form-label"><span>From: </span>{{ (strcmp($transaction->from_select,'user')==0) ? $transaction->fromUser->name : $transaction->fromAccount->name }}</label>
+        <label for="" class="form-label"><span>To: </span>{{ (strcmp($transaction->to_select,'user')==0) ? $transaction->toUser->name : $transaction->toAccount->name }}</label>
+        @if ($transaction->sell_id != null)
+        <label for="" class="form-label"><span> Sell ID: </span>{{ '#'.$transaction->sell_id }}</label>
         @endif
+        @if ($transaction->purchase_id != null)
+        <label for="" class="form-label"><span>Purchase ID: </span>{{ '#'.$transaction->purchase_id }}</label>
+        @endif
+        <label for="" class="form-label"><span>Type: </span>{{ ucwords($transaction->type) }}</label>
+        <label for="" class="form-label"><span>Status: </span>{{ ucwords($transaction->status) }}</label>
+        <label for="" class="form-label"><span>Amount: </span>{{ $transaction->amount.' Tk' }}</label>
+        <label for="" class="form-label"><span>Last Modified By: </span>{{ $transaction->user->name }}</label>
+        <label for="" class="form-label"><span>Created At: </span>{{ $transaction->created_at->diffForHumans() }}</label>
+        <label for="" class="form-label"><span>Amount: </span>{{ $transaction->updated_at->diffForHumans() }}</label>
     </div>
 </div>
 
@@ -75,9 +43,4 @@
             <button type="button" id="transactions_delete_close" class="btn btn-secondary">Close</button>
         </div>
     </form>
-</div>
-
-<div id="transaction_show_image_viewer" class="transaction-show-image-viewer hide">
-    <img src="" alt="">
-    <span id="transaction_show_image_viewer_close"><i class="fa-solid fa-x"></i></span>
 </div>

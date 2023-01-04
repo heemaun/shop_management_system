@@ -18,37 +18,35 @@
   max-width: 90%;
   min-width: 500px;
 }
-.transactions-create form .rows {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 1rem;
+.transactions-create form .form-groups {
   width: 100%;
 }
-.transactions-create form .rows .columns {
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: flex-start;
-  width: 50%;
+.transactions-create form .form-groups ul {
+  padding: 0rem;
+  margin: 0rem;
+  position: absolute;
+  list-style: none;
 }
-.transactions-create form .rows .columns img {
-  width: 100%;
-  height: auto;
-  max-width: 300px;
-  max-height: 300px;
-  -o-object-fit: cover;
-     object-fit: cover;
+.transactions-create form .form-groups ul li {
+  background: black;
+  color: white;
+  padding: 0.5rem 1rem;
   cursor: pointer;
-  padding: 0.5rem;
-  border: 0.1rem solid white;
-  border-radius: 0.5rem;
-  background: white;
 }
-.transactions-create form .rows .columns textarea {
-  height: 7.25rem;
+.transactions-create form .form-groups ul li:hover {
+  background: gray;
 }
-.transactions-create form .rows .columns span {
+.transactions-create form .two {
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.transactions-create form .two .rows .form-control, .transactions-create form .two .rows .form-select {
+  width: 100%;
+}
+.transactions-create form span {
   color: red;
   margin-bottom: 0.5rem;
 }
@@ -57,4 +55,5 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 0.5rem;
 }/*# sourceMappingURL=create.css.map */

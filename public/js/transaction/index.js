@@ -10,20 +10,6 @@ $("#content_loader").on("click","#transactions_index_create", function(e){
     });
 });
 
-// $("#content_loader").on("keyup","#transactions_index_search",function(){
-//     let search = $(this).val();
-//     $.ajax({
-//         url: "/transactions",
-//         type: "GET",
-//         data:{
-//             search: search,
-//         },
-//         success: function(response){
-//             $("#content_loader #transactions_index_table_container").html(response);
-//         }
-//     });
-// });
-
 $("#content_loader").on("click",".clickable",function(){
     let url = $(this).attr("data-href");
     $.ajax({

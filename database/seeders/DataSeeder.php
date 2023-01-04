@@ -183,7 +183,7 @@ class DataSeeder extends Seeder
                 'from_select'   => $from_select,
                 'to_select'     => $to_select,
                 'amount'        => rand(1,10000),
-                'created_at'    => date('Y-m-d H:m:s',rand(strtotime('2000-01-01'),strtotime('2023-1-3 23:59:59'))),
+                'created_at'    => date('Y-m-d H:m:s',rand(strtotime('2000-01-01'),strtotime('2023-12-31 23:59:59'))),
             ]);
         }
     }
