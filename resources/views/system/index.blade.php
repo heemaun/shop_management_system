@@ -8,6 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Shop Management System</title>
     <link rel="stylesheet" href="{{ asset('css/system/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="{{ asset('css/system/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('css/font-awesome/all.min.css') }}">
 
@@ -294,6 +295,7 @@
     @endif
 
     <script src="{{ asset('js/system/jquery.js') }}"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="{{ asset('js/system/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/system/toastr.js') }}"></script>
     <script src="{{ asset('js/font-awesome/all.min.js') }}"></script>

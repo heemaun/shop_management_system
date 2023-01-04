@@ -1,8 +1,8 @@
 function home()
 {
     $.ajax({
-        url: "/home",
-        // url: "/users/4",
+        // url: "/home",
+        url: "/transactions",
         type: "GET",
         success: function(response){
             $("#content_loader").html(response);

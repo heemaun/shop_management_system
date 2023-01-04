@@ -21,6 +21,9 @@ return new class extends Migration
             $table->foreignId('to_account')->nullable()->references('id')->on('accounts')->onDelete('cascade');
             $table->foreignId('from_user')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('to_user')->nullable()->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('sell_id')->nullable()->references('id')->on('sells')->onDelete('cascade');
+            $table->foreignId('purchase_id')->nullable()->references('id')->on('purchases')->onDelete('cascade');
+            $table->enum('type',['sell','purchase','salary','deposite','withdraw','transfer','other']);
             $table->enum('status',['active','pending','deleted','banned','restricted'])->default('pending');
             $table->enum('from_select',['user','account']);
             $table->enum('to_select',['user','account']);

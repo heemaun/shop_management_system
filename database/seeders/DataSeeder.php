@@ -2,17 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Models\Account;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Settings;
 use App\Models\Shop;
+use App\Models\Transaction;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Nette\Utils\Random;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Psy\Readline\Transient;
 
 class DataSeeder extends Seeder
 {
@@ -75,7 +74,7 @@ class DataSeeder extends Seeder
         ]);
         User::create([
             'shop_id' => $shop->id,
-            'name' => 'Maksuda Zaman Helem',
+            'name' => 'Maksuda Zaman Helen',
             'email' => 'maksudazamanhelem@gmail.com',
             'phone' => '01715577541',
             'user_name' => 'helen',
@@ -146,5 +145,46 @@ class DataSeeder extends Seeder
             'key' => 'Banner Image',
             'value' => 'main_bg.jpg',
         ]);
+
+        Account::create([
+            'shop_id' => 1,
+            'user_id' => 1,
+            'name' => 'Cash',
+            'initial_balance' => 1000,
+            'balance' => 1000,
+        ]);
+
+        Account::create([
+            'shop_id' => 1,
+            'user_id' => 1,
+            'name' => 'Mobile Banking',
+            'initial_balance' => 1500,
+            'balance' => 7000,
+        ]);
+
+        for($x=0;$x<100;$x++){
+
+            $from_select = ($x % 2 == 0) ? 'user' : 'account' ;
+            $to_select = ($x % 3 == 0) ? 'user' : 'account';
+            $status = ['active','pending','deleted','banned','restricted'];
+            $type = ['sell','purchase','salary','deposite','withdraw','transfer','other'];
+
+            Transaction::create([
+                'shop_id'       => 1,
+                'user_id'       => mt_rand(1,5),
+                'from_account'  => (strcmp($from_select,'user')==0) ? null : rand(1,2),
+                'from_user'     => (strcmp($from_select,'user')==0) ? rand(1,5) : null,
+                'to_account'    => (strcmp($to_select,'user')==0) ? null : rand(1,2),
+                'to_user'       => (strcmp($to_select,'user')==0) ? rand(1,5) : null,
+                'sell_id'       => null,
+                'purchase_id'   => null,
+                'type'          => $type[rand(0,6)],
+                'status'        => $status[rand(0,4)],
+                'from_select'   => $from_select,
+                'to_select'     => $to_select,
+                'amount'        => rand(1,10000),
+                'created_at'    => date('Y-m-d H:m:s',rand(strtotime('2000-01-01'),strtotime('2023-1-3 23:59:59'))),
+            ]);
+        }
     }
 }

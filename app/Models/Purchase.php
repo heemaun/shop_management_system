@@ -40,4 +40,9 @@ class Purchase extends Model
     {
         return $this->hasMany(PurchaseOrder::class);
     }
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

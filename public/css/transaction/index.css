@@ -1,1 +1,65 @@
-/*# sourceMappingURL=index.css.map */
+.transactions-index {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  gap: 0.5rem;
+}
+.transactions-index .top {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+.transactions-index .top .rows {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+.transactions-index .top .rows .form-group ul {
+  padding: 0rem;
+  margin: 0rem;
+  list-style: none;
+  position: absolute;
+}
+.transactions-index .top .rows .form-group ul li {
+  background: black;
+  color: white;
+  padding: 0.25rem 1rem;
+  cursor: pointer;
+}
+.transactions-index .top .rows .form-group ul li:hover {
+  background: gray;
+}
+.transactions-index .top .rows .form-group a {
+  width: 100%;
+  height: 100%;
+}
+.transactions-index .top .rows .one {
+  flex-grow: 1;
+}
+.transactions-index .top .rows .two {
+  flex-grow: 2;
+}
+.transactions-index .top .rows .eight {
+  flex-grow: 8;
+}
+.transactions-index .top .rows .ten {
+  flex-grow: 11;
+}
+.transactions-index .table-container {
+  width: 100%;
+}
+.transactions-index .table-container .index-error {
+  color: red;
+}
+.transactions-index .table-container table tbody .clickable {
+  cursor: pointer;
+}/*# sourceMappingURL=index.css.map */

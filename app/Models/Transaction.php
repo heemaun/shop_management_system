@@ -18,6 +18,9 @@ class Transaction extends Model
         'to_account',
         'from_user',
         'to_user',
+        'sell_id',
+        'purchase_id',
+        'type',
         'status',
         'from_select',
         'to_select',
@@ -52,5 +55,15 @@ class Transaction extends Model
     public function toUser()
     {
         return $this->belongsTo(User::class,'to_user');
+    }
+
+    public function sell()
+    {
+        return $this->belongsTo(Sell::class);
+    }
+
+    public function purchase()
+    {
+        return $this->belongsTo(Purchase::class);
     }
 }
