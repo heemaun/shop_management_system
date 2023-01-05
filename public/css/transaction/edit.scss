@@ -14,33 +14,37 @@
         justify-content: center;
         align-items: flex-start;
         padding: 1rem;
-        // gap: .5rem;
-        min-width: 500px;
         max-width: 90%;
+        min-width: 985px;
 
         .rows{
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
             width: 100%;
+            margin-bottom: .5rem;
+            gap: 1rem;
 
-            .columns{
-                display: flex;
-                flex-flow: column;
-                justify-content: center;
-                align-items: flex-start;
-                width: 50%;
+            .form-group{
+                width: 100%;
 
-                textarea{
-                    height: 7.25rem;
+                ul{
+                    padding: 0rem;
+                    margin: 0rem;
+                    position: absolute;
+                    list-style: none;
+
+                    li{
+                        background: gray;
+                        color: white;
+                        padding: .5rem 1rem;
+                        cursor: pointer;
+
+                        &:hover{
+                            background: black;
+                        }
+                    }
                 }
-
-                span{
-                    color: red;
-                    margin-bottom: .5rem;
-                }
-
             }
         }
 

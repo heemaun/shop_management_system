@@ -1,79 +1,104 @@
 <div id="transactions_edit" class="transactions-edit">
-    <form action="{{ route('transactions.update',$transaction->id) }}" method="POST" id="transactions_edit_form">
+    <form action="{{ route('transactions.update',$transaction->id) }}" method="POST" id="transactions_edit_form" >
         @csrf
         @method("PUT")
 
         <legend>Edit New Transaction</legend>
 
         <div class="rows">
-
-            <div class="columns">
-                <label for="transactions_edit_name" class="form-label">Name</label>
-                <input type="text" name="name" id="transactions_edit_name" placeholder="enter transaction name" class="form-control" value="{{ $transaction->name }}">
-                <span class="transactions-edit-error" id="transactions_edit_name_error"></span>
-
-                <label for="transactions_edit_email" class="form-label">Email</label>
-                <input type="text" name="email" id="transactions_edit_email" placeholder="enter transaction email" class="form-control" value="{{ $transaction->email }}">
-                <span class="transactions-edit-error" id="transactions_edit_email_error"></span>
-
-                <label for="transactions_edit_phone" class="form-label">Phone</label>
-                <input type="number" name="phone" id="transactions_edit_phone" placeholder="enter transaction phone" class="form-control" value="{{ $transaction->phone }}">
-                <span class="transactions-edit-error" id="transactions_edit_phone_error"></span>
-
-                <label for="transactions_edit_transaction_name" class="form-label">Transaction Name</label>
-                <input type="text" name="transaction_name" id="transactions_edit_transaction_name" placeholder="enter transaction transaction name" class="form-control" value="{{ $transaction->transaction_name }}">
-                <span class="transactions-edit-error" id="transactions_edit_transaction_name_error"></span>
-            </div>
-
-            <div class="columns">
-                <label for="transactions_edit_date_of_birth" class="form-label">Date of birth</label>
-                <input type="date" name="date_of_birth" id="transactions_edit_date_of_birth" placeholder="enter transaction date of birth" class="form-control" value="{{ $transaction->date_of_birth }}">
-                <span class="transactions-edit-error" id="transactions_edit_date_of_birth_error"></span>
-
-                <label for="transactions_edit_gender" class="form-label">Gender</label>
-                <select name="gender" id="transactions_edit_gender" class="form-select">
-                    <option value="">select a gender</option>
-                    <option value="male" {{ (strcmp('male',$transaction->gender)==0) ? 'selected' : '' }}>Male</option>
-                    <option value="female" {{ (strcmp('female',$transaction->gender)==0) ? 'selected' : '' }}>Female</option>
-                    <option value="other" {{ (strcmp('other',$transaction->gender)==0) ? 'selected' : '' }}>Other</option>
+            <div class="form-group">
+                <label for="transactions_edit_from_type" class="form-label">Select From Type</label>
+                <select name="from_select" id="transactions_edit_from_select" class="form-select" onchange="searchEditFromTrigger()">
+                    <option value="">Choose a option</option>
+                    <option value="user" {{ (strcmp('user',$transaction->from_select)==0) ? 'selected' : '' }}>User</option>
+                    <option value="account" {{ (strcmp('account',$transaction->from_select)==0) ? 'selected' : '' }}>Account</option>
                 </select>
-                <span class="transactions-edit-error" id="transactions_edit_gender_error"></span>
-
-                <label for="transactions_edit_address" class="form-label">Address</label>
-                <textarea name="address" id="transactions_edit_address" placeholder="enter transaction address" class="form-control">{{ $transaction->address }}</textarea>
-                <span class="transactions-edit-error" id="transactions_edit_address_error"></span>
+                <span class="transactions-edit-error" id="transactions_edit_from_select_error"></span>
             </div>
 
-            <div class="columns">
-                <label for="transactions_edit_salary" class="form-label">Salary</label>
-                <input type="number" name="salary" id="transactions_edit_salary" placeholder="enter transaction salary" class="form-control" value="{{ $transaction->salary }}">
-                <span class="transactions-edit-error" id="transactions_edit_salary_error"></span>
+            <div class="form-group">
+                <label for="transactions_edit_from_text" class="form-label">From</label>
+                <input type="text" id="transactions_edit_from_text" name="from" placeholder="enter name" class="form-control" onkeyup="searchEditFromText()" value="{{ (strcmp('user',$transaction->from_select)==0) ? $transaction->fromUser->name : $transaction->fromAccount->name }}">
+                <ul id="transactions_edit_from_ul">
 
-                <label for="transactions_edit_status" class="form-label">Status</label>
+                </ul>
+                <input type="text" id="transactions_edit_from_id" name="from_id" class="form-control" hidden value="{{ (strcmp('user',$transaction->from_select)==0) ? $transaction->from_user : $transaction->from_account }}">
+                <span class="transactions-edit-error" id="transactions_edit_from_id_error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="transactions_edit_to_type" class="form-label">Select To Type</label>
+                <select name="to_select" id="transactions_edit_to_select" class="form-select" onchange="searchEditToTrigger()">
+                    <option value="">Choose a option</option>
+                    <option value="user" {{ (strcmp('user',$transaction->to_select)==0) ? 'selected' : '' }}>User</option>
+                    <option value="account" {{ (strcmp('account',$transaction->to_select)==0) ? 'selected' : '' }}>Account</option>
+                </select>
+                <span class="transactions-edit-error" id="transactions_edit_to_select_error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="transactions_edit_to_text" class="form-label">To</label>
+                <input type="text" id="transactions_edit_to_text" name="to" placeholder="enter name" class="form-control" onkeyup="searchEditToText()" value="{{ (strcmp('user',$transaction->to_select)==0) ? $transaction->toUser->name : $transaction->toAccount->name }}">
+                <ul id="transactions_edit_to_ul">
+
+                </ul>
+                <input type="text" id="transactions_edit_to_id" name="to_id" class="form-control" hidden value="{{ (strcmp('user',$transaction->to_select)==0) ? $transaction->to_user : $transaction->to_account }}">
+                <span class="transactions-edit-error" id="transactions_edit_to_id_error"></span>
+            </div>
+        </div>
+
+        <div class="rows">
+            <div class="form-group">
+                <label for="transactions_edit_type" class="form-label">Select to type</label>
+                <select name="type" id="transactions_edit_type" class="form-select">
+                    <option value="" selected>Select a type</option>
+                    <option value="sell" {{ (strcmp('sell',$transaction->type)==0) ? 'selected' : '' }}>Sell</option>
+                    <option value="purchase" {{ (strcmp('purchase',$transaction->type)==0) ? 'selected' : '' }}>Purchase</option>
+                    <option value="salary" {{ (strcmp('salary',$transaction->type)==0) ? 'selected' : '' }}>Salary</option>
+                    <option value="deposite" {{ (strcmp('deposite',$transaction->type)==0) ? 'selected' : '' }}>Deposite</option>
+                    <option value="withdraw" {{ (strcmp('withdraw',$transaction->type)==0) ? 'selected' : '' }}>Withdraw</option>
+                    <option value="transfer" {{ (strcmp('transfer',$transaction->type)==0) ? 'selected' : '' }}>Transfer</option>
+                    <option value="other" {{ (strcmp('other',$transaction->type)==0) ? 'selected' : '' }}>Other</option>
+                </select>
+                <span class="transactions-edit-error" id="transactions_edit_type_error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="transactions_edit_status" class="form-label">Select status</label>
                 <select name="status" id="transactions_edit_status" class="form-select">
-                    <option value="">select a status</option>
+                    <option value="">Select a status</option>
                     <option value="pending" {{ (strcmp('pending',$transaction->status)==0) ? 'selected' : '' }}>Pending</option>
                     <option value="active" {{ (strcmp('active',$transaction->status)==0) ? 'selected' : '' }}>Active</option>
-                    <option value="deleted" {{ (strcmp('deleted',$transaction->status)==0) ? 'selected' : '' }}>Deleted</option>
                     <option value="banned" {{ (strcmp('banned',$transaction->status)==0) ? 'selected' : '' }}>Banned</option>
+                    <option value="deleted" {{ (strcmp('deleted',$transaction->status)==0) ? 'selected' : '' }}>Deleted</option>
                     <option value="restricted" {{ (strcmp('restricted',$transaction->status)==0) ? 'selected' : '' }}>Restricted</option>
                 </select>
                 <span class="transactions-edit-error" id="transactions_edit_status_error"></span>
+            </div>
 
-                <label for="transactions_edit_role" class="form-label">Role</label>
-                <select name="role" id="transactions_edit_role" class="form-select">
-                    <option value="">select a role</option>
-                    <option value="admin" {{ (strcmp('admin',$transaction->role)==0) ? 'selected' : '' }}>Admin</option>
-                    <option value="manager" {{ (strcmp('manager',$transaction->role)==0) ? 'selected' : '' }}>Manager</option>
-                    <option value="seller" {{ (strcmp('seller',$transaction->role)==0) ? 'selected' : '' }}>Seller</option>
-                    <option value="customer" {{ (strcmp('customer',$transaction->role)==0) ? 'selected' : '' }}>Customer</option>
-                </select>
-                <span class="transactions-edit-error" id="transactions_edit_role_error"></span>
+            <div class="form-group">
+                <label for="transactions_edit_amount" class="form-label">Amount</label>
+                <input type="number" name="amount" id="transactions_edit_amount" placeholder="enter amount" class="form-control" value="{{ $transaction->amount }}">
+                <span class="transactions-edit-error" id="transactions_edit_amount_error"></span>
+            </div>
+        </div>
+
+        <div class="rows">
+            <div class="form-group">
+                <label for="transactions_edit_purchase_id">Enter purchase id</label>
+                <input type="number" name="amount" id="transactions_edit_purchase_id" placeholder="enter purchase id" class="form-control" value="{{ $transaction->purchase_id }}">
+                <span class="transactions-edit-error" id="transactions_edit_purchase_id_error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="transactions_edit_sell_id">Enter sell id</label>
+                <input type="number" name="amount" id="transactions_edit_sell_id" placeholder="enter sell id" class="form-control" {{ $transaction->sell_id }}>
+                <span class="transactions-edit-error" id="transactions_edit_sell_id_error"></span>
             </div>
         </div>
 
         <div class="btn-container">
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary">Save</button>
             <a href="{{ route('transactions.show',$transaction->id) }}" id="transactions_edit_close" class="btn btn-secondary">Back</a>
         </div>
     </form>

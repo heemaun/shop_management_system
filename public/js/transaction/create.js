@@ -42,7 +42,6 @@ $("#content_loader").on("submit","#transactions_create_form",function(e){
             $(".transactions-create-error").text("");
         },
         success: function(response){
-            console.log(response);
             if(response.status === "errors"){
                 $.each(response.errors,function(key,value){
                     $("#transactions_create_"+key+"_error").text(value);

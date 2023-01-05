@@ -104,8 +104,8 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $data = Validator::make($request->all(),[
-            'from_id'     => 'required',
-            'to_id'       => 'required',
+            'from_id'       => 'required',
+            'to_id'         => 'required',
             'sell_id'       => 'required_if:type,sell',
             'purchase_id'   => 'required_if:type,purchase',
             'from_select'   => 'required',
@@ -190,12 +190,10 @@ class TransactionController extends Controller
     public function update(Request $request, Transaction $transaction)
     {
         $data = Validator::make($request->all(),[
-            'from_account'  => 'required_if:from_select,account',
-            'to_account'    => 'required_if:to_select,account',
-            'from_user'     => 'required_if:from_select,user',
-            'to_user'       => 'required_if:to_select,user',
+            'from_id'       => 'required',
+            'to_id'         => 'required',
             'sell_id'       => 'required_if:type,sell',
-            'purchase_id'   => 'required_id:type,purchase',
+            'purchase_id'   => 'required_if:type,purchase',
             'from_select'   => 'required',
             'to_select'     => 'required',
             'status'        => 'required',
@@ -216,10 +214,10 @@ class TransactionController extends Controller
             $data = $data->validate();
 
             $transaction->user_id       = getuser()->id;
-            $transaction->from_account  = $data['from_account'];
-            $transaction->to_account    = $data['to_account'];
-            $transaction->from_user     = $data['from_user'];
-            $transaction->to_user       = $data['to_user'];
+            $transaction->from_user     = (strcmp($data['from_select'],'user')==0) ? $data['from_id'] : null;
+            $transaction->from_account  = (strcmp($data['from_select'],'user')==0) ? null : $data['from_id'];
+            $transaction->to_user       = (strcmp($data['to_select'],'user')==0) ? $data['to_id'] : null;
+            $transaction->to_account    = (strcmp($data['to_select'],'user')==0) ? null : $data['to_id'];
             $transaction->sell_id       = $data['sell_id'];
             $transaction->purchase_id   = $data['purchase_id'];
             $transaction->from_select   = $data['from_select'];

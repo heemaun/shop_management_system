@@ -14,29 +14,34 @@
   justify-content: center;
   align-items: flex-start;
   padding: 1rem;
-  min-width: 500px;
   max-width: 90%;
+  min-width: 985px;
 }
 .transactions-edit form .rows {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.5rem;
   gap: 1rem;
+}
+.transactions-edit form .rows .form-group {
   width: 100%;
 }
-.transactions-edit form .rows .columns {
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: flex-start;
-  width: 50%;
+.transactions-edit form .rows .form-group ul {
+  padding: 0rem;
+  margin: 0rem;
+  position: absolute;
+  list-style: none;
 }
-.transactions-edit form .rows .columns textarea {
-  height: 7.25rem;
+.transactions-edit form .rows .form-group ul li {
+  background: gray;
+  color: white;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
 }
-.transactions-edit form .rows .columns span {
-  color: red;
-  margin-bottom: 0.5rem;
+.transactions-edit form .rows .form-group ul li:hover {
+  background: black;
 }
 .transactions-edit form span {
   color: red;
