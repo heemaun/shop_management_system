@@ -1,3 +1,3 @@
 @foreach ($results as $r)
-<li class="ul-clickable">{{ $r->name }}</li>
+<li class="ul-clickable" data-id="{{ $r->id }}">{{ $r->name }}</li>
 @endforeach

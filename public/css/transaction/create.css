@@ -16,44 +16,40 @@
   align-items: flex-start;
   padding: 1rem;
   max-width: 90%;
-  min-width: 500px;
+  min-width: 985px;
 }
-.transactions-create form .form-groups {
+.transactions-create form .rows {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+}
+.transactions-create form .rows .form-group {
   width: 100%;
 }
-.transactions-create form .form-groups ul {
+.transactions-create form .rows .form-group ul {
   padding: 0rem;
   margin: 0rem;
   position: absolute;
   list-style: none;
 }
-.transactions-create form .form-groups ul li {
-  background: black;
+.transactions-create form .rows .form-group ul li {
+  background: gray;
   color: white;
   padding: 0.5rem 1rem;
   cursor: pointer;
 }
-.transactions-create form .form-groups ul li:hover {
-  background: gray;
-}
-.transactions-create form .two {
-  width: 100%;
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between;
-  align-items: center;
-}
-.transactions-create form .two .rows .form-control, .transactions-create form .two .rows .form-select {
-  width: 100%;
+.transactions-create form .rows .form-group ul li:hover {
+  background: black;
 }
 .transactions-create form span {
   color: red;
-  margin-bottom: 0.5rem;
 }
 .transactions-create form .btn-container {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 0.5rem;
 }/*# sourceMappingURL=create.css.map */

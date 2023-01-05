@@ -16,48 +16,41 @@
         align-items: flex-start;
         padding: 1rem;
         max-width: 90%;
-        min-width: 500px;
+        min-width: 985px;
 
-        .form-groups{
-            width: 100%;
-
-            ul{
-                padding: 0rem;
-                margin: 0rem;
-                position: absolute;
-                list-style: none;
-
-                li{
-                    background: black;
-                    color: white;
-                    padding: .5rem 1rem;
-                    cursor: pointer;
-
-                    &:hover{
-                        background: gray;
-                    }
-                }
-            }
-        }
-
-        .two{
-            width: 100%;
+        .rows{
             display: flex;
-            flex-flow: row;
             justify-content: space-between;
             align-items: center;
-            // gap: 1rem;
+            width: 100%;
+            margin-bottom: .5rem;
+            gap: 1rem;
 
-            .rows{
-                .form-control, .form-select{
-                    width: 100%;
+            .form-group{
+                width: 100%;
+
+                ul{
+                    padding: 0rem;
+                    margin: 0rem;
+                    position: absolute;
+                    list-style: none;
+
+                    li{
+                        background: gray;
+                        color: white;
+                        padding: .5rem 1rem;
+                        cursor: pointer;
+
+                        &:hover{
+                            background: black;
+                        }
+                    }
                 }
             }
         }
 
         span{
             color: red;
-            margin-bottom: .5rem;
         }
 
         .btn-container{
@@ -65,7 +58,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: .5rem;
+            // margin-top: .5rem;
         }
     }
 }

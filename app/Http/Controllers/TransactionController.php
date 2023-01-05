@@ -104,12 +104,10 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $data = Validator::make($request->all(),[
-            'from_account'  => 'required_if:from_select,account',
-            'to_account'    => 'required_if:to_select,account',
-            'from_user'     => 'required_if:from_select,user',
-            'to_user'       => 'required_if:to_select,user',
+            'from_id'     => 'required',
+            'to_id'       => 'required',
             'sell_id'       => 'required_if:type,sell',
-            'purchase_id'   => 'required_id:type,purchase',
+            'purchase_id'   => 'required_if:type,purchase',
             'from_select'   => 'required',
             'to_select'     => 'required',
             'status'        => 'required',
@@ -131,13 +129,13 @@ class TransactionController extends Controller
 
             $transaction = Transaction::create([
                 'shop_id'       => getUser()->shop_id,
-                'user_id'       => getUser()->user_id,
-                'from_account'  => $data['from_account'],
-                'to_account'    => $data['to_account'],
-                'from_user'     => $data['from_user'],
-                'to_user'       => $data['to_user'],
-                'sell_id'       => $data['sell_id'],
-                'purchase_id'   => $data['purchase_id'],
+                'user_id'       => getUser()->id,
+                'from_account'  => (strcmp('user',$data['from_select'])==0) ? null : $data['from_id'],
+                'to_account'    => (strcmp('user',$data['to_select'])==0) ? null : $data['to_id'],
+                'from_user'     => (strcmp('user',$data['from_select'])==0) ? $data['from_id'] : null,
+                'to_user'       => (strcmp('user',$data['to_select'])==0) ? $data['to_id'] : null,
+                'sell_id'       => (array_key_exists('sell_id',$data)) ? $data['sell_id'] : null,
+                'purchase_id'   => (array_key_exists('purchase_id',$data)) ? $data['purchase_id'] : null,
                 'from_select'   => $data['from_select'],
                 'to_select'     => $data['to_select'],
                 'status'        => $data['status'],
