@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Sell;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -16,15 +17,34 @@ class SellController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($user_name = null, $customer_name = null, $status = null)
+    public function index(Request $request)
     {
-        $sells = Sell::join('users as u','u.id','=','sells.user_id')
-                                ->join('users as c','c.id','=','sells.customer_id')
-                                ->where('sells.shop_id',getUser()->shop_id)
-                                ->where('u.name' , 'LIKE', '%'.$user_name.'%')
-                                ->where('c.name' , 'LIKE', '%'.$customer_name.'%')
-                                ->where('status',$status)
-                                ->get();
+        if(array_key_exists('search',$request->all())){
+            // return response()->json([
+            //     'data' => $request->all(),
+            // ]);
+            if(strcmp($request->status,'all')==0){
+                $status = ['pending','active','deleted','banned','restricted'];
+            }
+            else{
+                $status = [$request->status];
+            }
+            $users = User::where('name','LIKE','%'.$request->search.'%')
+                            ->orderBy('name')
+                            ->get();
+            $users_id_array = array();
+            foreach($users as $user){
+                array_push($users_id_array,$user->id);
+            }
+            $sells = Sell::whereIn('customer_id',$users_id_array)
+                            ->whereIn('status',$status)
+                            ->whereBetween('created_at',[$request->from,$request->to])
+                            ->orderBy('created_at','DESC')
+                            ->get();
+            return response(view('sell.search',compact('sells')));
+        }
+        $sells = Sell::orderBy('created_at','DESC')
+                        ->get();
         return response(view('sell.index',compact('sells')));
     }
 
@@ -66,9 +86,9 @@ class SellController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
-            Sell::create([
+            $sell = Sell::create([
                 'shop_id'               => getUser()->shop_id,
                 'user_id'               => getUser()->id,
                 'customer_id'           => $data['customer_id'],
@@ -83,8 +103,9 @@ class SellController extends Controller
             DB::commit();
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'Sell added successfully',
+                'status'    => 'success',
+                'message'   => 'Sell added successfully',
+                'url'       => route('sells.show',$sell->id),
             ]);
         }catch(Exception $e){
             DB::rollBack();
@@ -146,7 +167,7 @@ class SellController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
             $sell->user_id              = getUser()->id;
             $sell->customer_id          = $data['customer_id'];
@@ -162,8 +183,9 @@ class SellController extends Controller
             DB::commit();
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'Sell updated successfully',
+                'status'    => 'success',
+                'message'   => 'Sell updated successfully',
+                'url'       => route('sells.show',$sell->id),
             ]);
         }catch(Exception $e){
             DB::rollBack();
@@ -196,7 +218,7 @@ class SellController extends Controller
         DB::beginTransaction();
 
         try{
-            $data->validate();
+            $data = $data->validate();
 
             if(Hash::check($data['password'],getUser()->password)){
                 $sell->delete();
@@ -206,6 +228,7 @@ class SellController extends Controller
                 return response()->json([
                     'status'    => 'success',
                     'message'   => 'Sell deleted successfully',
+                    'url'       => route('sells.index'),
                 ]);
             }
 

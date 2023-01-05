@@ -1,0 +1,63 @@
+.sells-edit{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 90vh;
+
+    form{
+        background: black;
+        color: white;
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 1rem;
+        max-width: 90%;
+        min-width: 985px;
+
+        .rows{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: .5rem;
+            gap: 1rem;
+
+            .form-group{
+                width: 100%;
+
+                ul{
+                    padding: 0rem;
+                    margin: 0rem;
+                    position: absolute;
+                    list-style: none;
+
+                    li{
+                        background: gray;
+                        color: white;
+                        padding: .5rem 1rem;
+                        cursor: pointer;
+
+                        &:hover{
+                            background: black;
+                        }
+                    }
+                }
+            }
+        }
+
+        span{
+            color: red;
+            margin-bottom: .5rem;
+        }
+
+        .btn-container{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+}

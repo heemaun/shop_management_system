@@ -2,16 +2,19 @@
 
 namespace Database\Seeders;
 
-use App\Models\Account;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\Settings;
+use App\Models\Sell;
 use App\Models\Shop;
-use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Account;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\Purchase;
+use App\Models\PurchaseOrder;
+use App\Models\SellOrder;
+use App\Models\Settings;
+use App\Models\Transaction;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Psy\Readline\Transient;
 
 class DataSeeder extends Seeder
 {
@@ -122,6 +125,11 @@ class DataSeeder extends Seeder
                 'name' => 'Product '.($x+1),
                 'status' => $status[rand(0,4)],
                 'picture' => 'product_'.rand(1,7).'.jpg',
+                'initial_inventory' => rand(1,1000),
+                'current_inventory' => rand(1,1000),
+                'purchase_price' => rand(1,100),
+                'avg_purchase_price' => rand(1,100),
+                'selling_price' => rand(1,100),
             ]);
         }
 
@@ -162,11 +170,12 @@ class DataSeeder extends Seeder
             'balance' => 7000,
         ]);
 
+        $status = ['active','pending','deleted','banned','restricted'];
+
         for($x=0;$x<100;$x++){
 
             $from_select = ($x % 2 == 0) ? 'user' : 'account' ;
             $to_select = ($x % 3 == 0) ? 'user' : 'account';
-            $status = ['active','pending','deleted','banned','restricted'];
             $type = ['sell','purchase','salary','deposite','withdraw','transfer','other'];
 
             Transaction::create([
@@ -185,6 +194,84 @@ class DataSeeder extends Seeder
                 'amount'        => rand(1,10000),
                 'created_at'    => date('Y-m-d H:m:s',rand(strtotime('2000-01-01'),strtotime('2023-12-31 23:59:59'))),
             ]);
+        }
+
+        for($x=0;$x<100;$x++){
+            Sell::create([
+                'shop_id'               => 1,
+                'user_id'               => rand(1,5),
+                'customer_id'           => rand(1,5),
+                'status'                => $status[rand(0,4)],
+                'total_price'           => 0,
+                'total_order_count'     => 0,
+                'total_product_count'   => 0,
+                'less'                  => 0,
+                'vat'                   => 0,
+                'created_at'            => date('Y-m-d H:m:s',rand(strtotime('2000-01-01'),strtotime('2023-12-31 23:59:59'))),
+            ]);
+        }
+
+        for($x=0;$x<1000;$x++){
+            $product_id = rand(1,50);
+            $units = rand(1,15);
+            $sellOrder = SellOrder::create([
+                'shop_id'       => 1,
+                'user_id'       => rand(1,5),
+                'sell_id'       => rand(1,100),
+                'product_id'    => $product_id,
+                'status'        => $status[rand(0,4)],
+                'units'         => $units,
+                'unit_price'    => Product::find($product_id)->selling_price,
+                'subtotal'      => Product::find($product_id)->selling_price * $units,
+                'discount'      => Product::find($product_id)->selling_price * $units * rand(1,5) * .01,
+                'created_at'    => date('Y-m-d H:m:s',rand(strtotime('2000-01-01'),strtotime('2023-12-31 23:59:59'))),
+            ]);
+
+            $sellOrder->sell->total_price += ($sellOrder->subtotal - $sellOrder->discount);
+            $sellOrder->sell->total_order_count++ ;
+            $sellOrder->sell->total_product_count += $sellOrder->units;
+            $sellOrder->sell->save();
+
+            $sellOrder->sell->less = $sellOrder->sell->total_price * rand(1,5) * 0.01;
+            $sellOrder->sell->save();
+
+            $sellOrder->sell->vat = ($sellOrder->sell->total_price - $sellOrder->sell->less) * 0.15;
+            $sellOrder->sell->save();
+        }
+
+        for($x=0;$x<100;$x++){
+            Purchase::create([
+                'shop_id'               => 1,
+                'user_id'               => rand(1,5),
+                'customer_id'           => rand(1,5),
+                'status'                => $status[rand(0,4)],
+                'total_price'           => 0,
+                'total_order_count'     => 0,
+                'total_product_count'   => 0,
+                'created_at'            => date('Y-m-d H:m:s',rand(strtotime('2000-01-01'),strtotime('2023-12-31 23:59:59'))),
+            ]);
+        }
+
+        for($x=0;$x<200;$x++){
+            $product_id = rand(1,50);
+            $units = rand(1,15);
+            $purchaseOrder = PurchaseOrder::create([
+                'shop_id'       => 1,
+                'user_id'       => rand(1,5),
+                'purchase_id'   => rand(1,100),
+                'product_id'    => $product_id,
+                'status'        => $status[rand(0,4)],
+                'units'         => $units,
+                'unit_price'    => Product::find($product_id)->avg_purchase_price,
+                'subtotal'      => Product::find($product_id)->avg_purchase_price * $units,
+                'discount'      => Product::find($product_id)->avg_purchase_price * $units * rand(1,5) * .01,
+                'created_at'    => date('Y-m-d H:m:s',rand(strtotime('2000-01-01'),strtotime('2023-12-31 23:59:59'))),
+            ]);
+
+            $purchaseOrder->purchase->total_price += ($purchaseOrder->subtotal - $purchaseOrder->discount);
+            $purchaseOrder->purchase->total_order_count++ ;
+            $purchaseOrder->purchase->total_product_count += $purchaseOrder->units;
+            $purchaseOrder->purchase->save();
         }
     }
 }

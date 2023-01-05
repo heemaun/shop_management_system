@@ -1,1 +1,55 @@
-/*# sourceMappingURL=create.css.map */
+.sells-create {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 90vh;
+  overflow-y: auto;
+}
+.sells-create form {
+  background: black;
+  color: white;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem;
+  max-width: 90%;
+  min-width: 985px;
+}
+.sells-create form .rows {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+}
+.sells-create form .rows .form-group {
+  width: 100%;
+}
+.sells-create form .rows .form-group ul {
+  padding: 0rem;
+  margin: 0rem;
+  position: absolute;
+  list-style: none;
+}
+.sells-create form .rows .form-group ul li {
+  background: gray;
+  color: white;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.sells-create form .rows .form-group ul li:hover {
+  background: black;
+}
+.sells-create form span {
+  color: red;
+}
+.sells-create form .btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}/*# sourceMappingURL=create.css.map */
