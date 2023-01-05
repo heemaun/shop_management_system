@@ -43,7 +43,7 @@ class Sell extends Model
         return $this->hasMany(SellOrder::class);
     }
 
-    public function transaction()
+    public function transactions()
     {
         return $this->hasMany(Transaction::class);
     }

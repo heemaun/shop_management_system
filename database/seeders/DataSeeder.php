@@ -173,30 +173,6 @@ class DataSeeder extends Seeder
         $status = ['active','pending','deleted','banned','restricted'];
 
         for($x=0;$x<100;$x++){
-
-            $from_select = ($x % 2 == 0) ? 'user' : 'account' ;
-            $to_select = ($x % 3 == 0) ? 'user' : 'account';
-            $type = ['sell','purchase','salary','deposite','withdraw','transfer','other'];
-
-            Transaction::create([
-                'shop_id'       => 1,
-                'user_id'       => mt_rand(1,5),
-                'from_account'  => (strcmp($from_select,'user')==0) ? null : rand(1,2),
-                'from_user'     => (strcmp($from_select,'user')==0) ? rand(1,5) : null,
-                'to_account'    => (strcmp($to_select,'user')==0) ? null : rand(1,2),
-                'to_user'       => (strcmp($to_select,'user')==0) ? rand(1,5) : null,
-                'sell_id'       => null,
-                'purchase_id'   => null,
-                'type'          => $type[rand(0,6)],
-                'status'        => $status[rand(0,4)],
-                'from_select'   => $from_select,
-                'to_select'     => $to_select,
-                'amount'        => rand(1,10000),
-                'created_at'    => date('Y-m-d H:m:s',rand(strtotime('2000-01-01'),strtotime('2023-12-31 23:59:59'))),
-            ]);
-        }
-
-        for($x=0;$x<100;$x++){
             Sell::create([
                 'shop_id'               => 1,
                 'user_id'               => rand(1,5),
@@ -272,6 +248,43 @@ class DataSeeder extends Seeder
             $purchaseOrder->purchase->total_order_count++ ;
             $purchaseOrder->purchase->total_product_count += $purchaseOrder->units;
             $purchaseOrder->purchase->save();
+        }
+
+        for($x=0;$x<100;$x++){
+
+            $from_select = ($x % 2 == 0) ? 'user' : 'account' ;
+            $to_select = ($x % 3 == 0) ? 'user' : 'account';
+            $types = ['sell','purchase','salary','deposite','withdraw','transfer','other'];
+            $type = $types[rand(0,6)];
+            if(strcmp($type,'sell')==0){
+                $sell_id = rand(1,100);
+                $purchase_id = null;
+            }
+            else if(strcmp($type,'purchase')==0){
+                $sell_id = null;
+                $purchase_id = rand(1,100);
+            }
+            else{
+                $purchase_id = null;
+                $sell_id = null;
+            }
+
+            Transaction::create([
+                'shop_id'       => 1,
+                'user_id'       => mt_rand(1,5),
+                'from_account'  => (strcmp($from_select,'user')==0) ? null : rand(1,2),
+                'from_user'     => (strcmp($from_select,'user')==0) ? rand(1,5) : null,
+                'to_account'    => (strcmp($to_select,'user')==0) ? null : rand(1,2),
+                'to_user'       => (strcmp($to_select,'user')==0) ? rand(1,5) : null,
+                'sell_id'       => $sell_id,
+                'purchase_id'   => $purchase_id,
+                'type'          => $type,
+                'status'        => $status[rand(0,4)],
+                'from_select'   => $from_select,
+                'to_select'     => $to_select,
+                'amount'        => rand(1,10000),
+                'created_at'    => date('Y-m-d H:m:s',rand(strtotime('2000-01-01'),strtotime('2023-12-31 23:59:59'))),
+            ]);
         }
     }
 }

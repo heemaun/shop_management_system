@@ -1,52 +1,52 @@
+.sells-show {
+  padding: 0rem 1rem;
+}
 .sells-show .top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0rem;
 }
-.sells-show .image {
-  display: flex;
-  flex-flow: column;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-.sells-show .image .change-image {
-  position: absolute;
-  transform: translateX(0.6rem) translateY(0.6rem);
-}
-.sells-show .image form {
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 0.5rem;
-}
-.sells-show .image img {
-  max-height: 30vh;
-  min-height: 200px;
-  min-width: 200px;
-  -o-object-fit: cover;
-     object-fit: cover;
-  padding: 0.5rem;
-  border: 0.1rem solid gray;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-.sells-show .details {
-  padding: 0rem 1rem;
-}
-.sells-show .details label {
+.sells-show .middle {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 0.1rem dashed gray;
-  font-style: italic;
 }
-.sells-show .details label span {
+.sells-show .middle .sides {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.sells-show .middle .sides label {
+  font-style: italic;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 0.5rem;
+  border-bottom: 0.1rem dashed gray;
+}
+.sells-show .middle .sides label span {
+  font-style: normal;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: larger;
+}
+.sells-show .sell-orders table th, .sells-show .payments table th {
+  text-align: center;
+  vertical-align: middle;
+}
+.sells-show .sell-orders table .left, .sells-show .payments table .left {
+  text-align: left;
+  vertical-align: middle;
+}
+.sells-show .sell-orders table .right, .sells-show .payments table .right {
+  text-align: right;
+  vertical-align: middle;
+}
+.sells-show .sell-orders table .center, .sells-show .payments table .center {
+  text-align: center;
+  vertical-align: middle;
 }
 
 .sells-delete {

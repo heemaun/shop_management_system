@@ -1,35 +1,110 @@
 <div id="sells_show" class="sells-show">
     <div class="top">
-        <h2>Transaction Details</h2>
+        <h2>Sell Details</h2>
         <div class="btn-container">
             <a href="{{ route('sells.index') }}" id="sells_show_back" class="btn btn-secondary">Back</a>
-            <a href="{{ route('sells.edit',$transaction->id) }}" id="sells_show_edit" class="btn btn-info">Edit</a>
+            <a href="{{ route('sells.edit',$sell->id) }}" id="sells_show_edit" class="btn btn-info">Edit</a>
             <button type="button" id="sells_show_delete_trigger" class="btn btn-danger">Delete</button>
         </div>
     </div>
 
-    <div class="details">
-        <label for="" class="form-label"><span>ID: </span>{{ '#'.$transaction->id }}</label>
-        <label for="" class="form-label"><span>Shop Name: </span>{{ $transaction->shop->shop_name }}</label>
-        <label for="" class="form-label"><span>From: </span>{{ (strcmp($transaction->from_select,'user')==0) ? $transaction->fromUser->name : $transaction->fromAccount->name }}</label>
-        <label for="" class="form-label"><span>To: </span>{{ (strcmp($transaction->to_select,'user')==0) ? $transaction->toUser->name : $transaction->toAccount->name }}</label>
-        @if ($transaction->sell_id != null)
-        <label for="" class="form-label"><span> Sell ID: </span>{{ '#'.$transaction->sell_id }}</label>
-        @endif
-        @if ($transaction->purchase_id != null)
-        <label for="" class="form-label"><span>Purchase ID: </span>{{ '#'.$transaction->purchase_id }}</label>
-        @endif
-        <label for="" class="form-label"><span>Type: </span>{{ ucwords($transaction->type) }}</label>
-        <label for="" class="form-label"><span>Status: </span>{{ ucwords($transaction->status) }}</label>
-        <label for="" class="form-label"><span>Amount: </span>{{ $transaction->amount.' Tk' }}</label>
-        <label for="" class="form-label"><span>Last Modified By: </span>{{ $transaction->user->name }}</label>
-        <label for="" class="form-label"><span>Created At: </span>{{ $transaction->created_at->diffForHumans() }}</label>
-        <label for="" class="form-label"><span>Amount: </span>{{ $transaction->updated_at->diffForHumans() }}</label>
+    <div class="middle">
+        <div class="sides">
+            <label for="" class="form-label"><span>ID: </span>{{ '#'.$sell->id }}</label>
+            <label for="" class="form-label"><span>Shop Name: </span>{{ $sell->shop->shop_name }}</label>
+            <label for="" class="form-label"><span>Seller: </span>{{ $sell->user->name }}</label>
+        </div>
+        <div class="sides">
+            <label for="" class="form-label"><span>Date: </span>{{ date('l, F - d, Y', strtotime($sell->created_at)) }}</label>
+            <label for="" class="form-label"><span>Time: </span>{{ date('h:m:i A', strtotime($sell->created_at)) }}</label>
+            <label for="" class="form-label"><span>Customer: </span>{{ $sell->customer->name }}</label>
+        </div>
     </div>
+
+    <div class="sell-orders">
+        <table class="table table-dark table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Product</th>
+                    <th>Unit Price</th>
+                    <th>Units</th>
+                    <th>Sub-total</th>
+                    <th>Discount</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($sell->sellOrders as $so)
+                <tr class="clickable" data-href="{{ route('sell-orders.show', $so->id) }}">
+                    <td class="center">{{ $loop->iteration }}</td>
+                    <td class="center">{{ $so->product->name }}</td>
+                    <td class="right">{{ $so->unit_price }}</td>
+                    <td class="right">{{ $so->units }}</td>
+                    <td class="right">{{ $so->subtotal }}</td>
+                    <td class="right">{{ $so->discount }}</td>
+                    <td class="right">{{ $so->subtotal - $so->discount }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <thead>
+                    <tr>
+                        <th colspan="5" rowspan="4" class="center">Order Count: {{ $sell->total_order_count }} Product Count: {{ $sell->total_product_count }}</th>
+                        <th class="left">Grand Total</th>
+                        <td class="right">{{ $sell->total_price }}</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Less</th>
+                        <td class="right">{{ $sell->less }}</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Vat</th>
+                        <td class="right">{{ $sell->vat }}</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Final Total</th>
+                        <td class="right">{{ $sell->total_price - $sell->less + $sell->vat }}</td>
+                    </tr>
+                </thead>
+            </tfoot>
+        </table>
+    </div>
+
+    @if (count($sell->transactions)>0)
+    <h3>Payments</h3>
+    <div class="payments">
+        <table class="table table-dark table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Transaction ID</th>
+                    <th>Transaction Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($sell->transactions as $t)
+                <tr>
+                    <td class="center">{{ date('Y-m-d h:m:i A',strtotime($t->created_at)) }}</td>
+                    <td class="right">{{ '#'.$t->id }}</td>
+                    <td class="right">{{ $t->amount }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th class="right" colspan="2">Total</th>
+                    <td class="right">{{ $total_payment }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    @endif
+
 </div>
 
 <div id="sells_delete" class="sells-delete hide">
-    <form action="{{ route('sells.destroy',$transaction->id) }}" method="POST" id="sells_delete_form">
+    <form action="{{ route('sells.destroy',$sell->id) }}" method="POST" id="sells_delete_form">
         @csrf
         @method("DELETE")
         <legend>Enter password to confirm delete</legend>

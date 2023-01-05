@@ -124,7 +124,13 @@ class SellController extends Controller
      */
     public function show(Sell $sell)
     {
-        return response(view('sell.show',compact('sell')));
+        $total_payment = 0;
+        if(count($sell->transactions)>0){
+            foreach($sell->transactions as $t){
+                $total_payment += $t->amount;
+            }
+        }
+        return response(view('sell.show',compact('sell','total_payment')));
     }
 
     /**
