@@ -154,6 +154,13 @@ class DataSeeder extends Seeder
             'value' => 'main_bg.jpg',
         ]);
 
+        Settings::create([
+            'shop_id' => 1,
+            'user_id' => 5,
+            'key' => 'Vat',
+            'value' => 15,
+        ]);
+
         Account::create([
             'shop_id' => 1,
             'user_id' => 1,

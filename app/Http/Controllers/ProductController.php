@@ -21,7 +21,16 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $categories = Category::all();
-        if(array_key_exists('search',$request->all())){
+        if(array_key_exists('key_sell',$request->all())){
+            $products = Product::where('name','like','%'.$request->search.'%')
+                                    ->where('shop_id',getUser()->shop_id)
+                                    ->orderBy('name')
+                                    ->limit(5)
+                                    ->get();
+            return response(view('sell.product-search-ul',compact('products')));
+        }
+
+        else if(array_key_exists('search',$request->all())){
 
             if(strcmp($request->status,'all')==0){
                 $status = ['pending','active','deleted','banned','restricted'];
@@ -49,8 +58,9 @@ class ProductController extends Controller
                                     ->orderBy('name')
                                     ->get();
 
-            return response(view('product.search',compact('products','categories')));
+            return response(view('product.search',compact('products','products')));
         }
+
         $products = Product::where('shop_id',getUser()->shop_id)
                             ->orderBy('status')
                             ->orderBy('name')

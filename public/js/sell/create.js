@@ -67,106 +67,146 @@ $("#content_loader").on("submit","#sells_create_form",function(e){
     });
 });
 
-function searchFromTrigger()
+function sellsCreateUserSearch()
 {
-    $("#sells_create_from_text").val("");
-    $("#sells_create_from_ul").html("");
-
-    if($("#sells_create_from_select").val() === ""){
-        $("#sells_create_from_text").attr("disabled","true");
-    }
-    else{
-        $("#sells_create_from_text").removeAttr("disabled");
-    }
-}
-
-function searchToTrigger()
-{
-    $("#sells_create_to_text").val("");
-    $("#sells_create_to_ul").html("");
-
-    if($("#sells_create_to_select").val() === ""){
-        $("#sells_create_to_text").attr("disabled","true");
-    }
-    else{
-        $("#sells_create_to_text").removeAttr("disabled");
-    }
-}
-
-function searchFromText()
-{
-    let type = $("#sells_create_from_select").val();
-    let text = $("#sells_create_from_text").val();
-    let url = "";
+    let text = $("#sells_create_user_text").val();
+    let url = "/users";
 
     if(text !== ""){
-        if(type === "user"){
-            url = "/users";
-        }
-        else{
-            url = "/accounts";
-        }
-
         $.ajax({
             url: url,
             type: "GET",
             data:{
-                key: "from_transaction_index",
+                key_sell: "key_sell",
                 search: text,
             },
             success: function(response){
-                $("#sells_create_from_ul").html(response);
-                $("#sells_create_from_ul").removeClass("hide");
+                $("#sells_create_user_ul").html(response);
+                $("#sells_create_user_ul").removeClass("hide");
             }
         });
     }
     else{
-        $("#sells_create_from_ul").html("");
-        $("#sells_create_from_ul").addClass("hide");
+        $("#sells_create_user_ul").html("");
+        $("#sells_create_user_ul").addClass("hide");
     }
 }
 
-function searchToText()
+$("#content_loader").on("click","#sells_create_user_ul .ul-clickable", function(e){
+    $("#sells_create_user_text").val($(this).html());
+    $("#sells_create_user_id").val($(this).attr("data-id"));
+    $("#sells_create_user_ul").addClass("hide");
+});
+
+function sellsCreateProductSearch()
 {
-    let type = $("#sells_create_to_select").val();
-    let text = $("#sells_create_to_text").val();
-    let url = "";
+    let text = $("#sells_create_product_text").val();
+    let url = "/products";
 
     if(text !== ""){
-        if(type === "user"){
-            url = "/users";
-        }
-        else{
-            url = "/accounts";
-        }
-
         $.ajax({
             url: url,
             type: "GET",
             data:{
-                key: "to_transaction_index",
+                key_sell: "key_sell",
                 search: text,
             },
             success: function(response){
-                $("#sells_create_to_ul").html(response);
-                $("#sells_create_to_ul").removeClass("hide");
+                $("#sells_create_product_ul").html(response);
+                $("#sells_create_product_ul").removeClass("hide");
             }
         });
     }
     else{
-        $("#sells_create_to_ul").html("");
-        $("#sells_create_to_ul").addClass("hide");
+        $("#sells_create_product_ul").html("");
+        $("#sells_create_product_ul").addClass("hide");
     }
 }
 
-$("#content_loader").on("click","#sells_create_from_ul .ul-clickable", function(e){
-    $("#sells_create_from_text").val($(this).html());
-    $("#sells_create_from_id").val($(this).attr("data-id"));
-    $("#sells_create_from_ul").addClass("hide");
+$("#content_loader").on("click","#sells_create_product_ul .ul-clickable", function(e){
+    $("#sells_create_product_text").val($(this).html());
+    $("#sells_create_product_id").val($(this).attr("data-id"));
+    $("#sells_create_product_ul").addClass("hide");
+
+    let unit_price = $(this).attr("data-unit-price");
+
+    $("#sells_create_product_units").val(1);
+    $("#sells_create_product_discount").val(0);
+    $("#sells_create_product_unit_price").text(unit_price);
+    $("#sells_create_product_subtotal").html(unit_price);
+    $("#sells_create_product_total").text(unit_price);
 });
 
-$("#content_loader").on("click","#sells_create_to_ul .ul-clickable", function(e){
-    $("#sells_create_to_text").val($(this).html());
-    $("#sells_create_to_id").val($(this).attr("data-id"));
-    $("#sells_create_to_ul").addClass("hide");
+function sellsCreateAccountSearch()
+{
+    let text = $("#sells_create_account_text").val();
+    let url = "/accounts";
+
+    if(text !== ""){
+        $.ajax({
+            url: url,
+            type: "GET",
+            data:{
+                key_sell: "key_sell",
+                search: text,
+            },
+            success: function(response){
+                $("#sells_create_account_ul").html(response);
+                $("#sells_create_account_ul").removeClass("hide");
+            }
+        });
+    }
+    else{
+        $("#sells_create_account_ul").html("");
+        $("#sells_create_account_ul").addClass("hide");
+    }
+}
+
+$("#content_loader").on("click","#sells_create_account_ul .ul-clickable", function(e){
+    $("#sells_create_account_text").val($(this).html());
+    $("#sells_create_account_id").val($(this).attr("data-id"));
+    $("#sells_create_account_ul").addClass("hide");
 });
+
+$("#content_loader").on("click","#sells_create_product_add",function (e){
+    e.preventDefault();
+    let url = $("#sells_create_product_add").attr("href");
+    let sell_id = $("#sells_create_product_add").attr("data-sell-id");
+    let product_id = $("#sells_create_product_id").val();
+    let units = $("#sells_create_product_units").val();
+    let discount = $("#sells_create_product_discount").val();
+    let status = "pending";
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        // dataType: 'json',
+        data:{
+            sell_id: sell_id,
+            product_id: product_id,
+            units: units,
+            discount: discount,
+            status: status,
+        },
+        beforeSend: function(){
+            console.log(url,sell_id,product_id,units,discount,status);
+        },
+        success: function(response){
+            console.log(response);
+            $("#sells_create_orders_table").html(response);
+        }
+    });
+});
+
+function productDetailsChange()
+{
+    let units = $("#sells_create_product_units").val();
+    let discount = $("#sells_create_product_discount").val();
+    let unit_price = $("#sells_create_product_unit_price").text();
+
+    let subtotal = unit_price * units;
+    let total = subtotal - discount;
+
+    $("#sells_create_product_subtotal").html(subtotal);
+    $("#sells_create_product_total").html(total);
+}

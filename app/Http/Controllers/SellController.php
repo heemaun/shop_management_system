@@ -55,7 +55,25 @@ class SellController extends Controller
      */
     public function create()
     {
-        return response(view('sell.create'));
+        $sell = Sell::where('shop_id',getUser()->shop_id)
+                        ->where('user_id',getUser()->id)
+                        ->where('status','pending')
+                        ->orderBy('created_at','DESC')
+                        ->first();
+        if($sell === null){
+            $sell = Sell::create([
+                'shop_id'               => getuser()->shop_id,
+                'user_id'               => getuser()->id,
+                'customer_id'           => 1,
+                'status'                => 'pending',
+                'total_price'           => 0,
+                'total_product_count'   => 0,
+                'total_order_count'     => 0,
+                'less'                  => 0,
+                'vat'                   => 0,
+            ]);
+        }
+        return response(view('sell.create',compact('sell')));
     }
 
     /**

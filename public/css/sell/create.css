@@ -1,11 +1,12 @@
 .sells-create {
   display: flex;
   flex-flow: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 90vh;
   overflow-y: auto;
+  padding-top: 0.5rem;
 }
 .sells-create form {
   background: black;
@@ -18,38 +19,136 @@
   max-width: 90%;
   min-width: 985px;
 }
-.sells-create form .rows {
+.sells-create form .top {
+  width: 100%;
+}
+.sells-create form .top .rows {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   width: 100%;
   margin-bottom: 0.5rem;
   gap: 1rem;
+  background: gray;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  box-shadow: 0rem 0rem 0.5rem gray;
 }
-.sells-create form .rows .form-group {
+.sells-create form .top .rows .form-group {
+  max-height: 4.375rem;
+}
+.sells-create form .top .rows .form-group .form-label {
   width: 100%;
 }
-.sells-create form .rows .form-group ul {
+.sells-create form .top .rows .form-group .custom-label {
+  text-align: right;
+  background: gray;
+  padding: 5px;
+  margin: 0rem;
+  border-radius: 0.25rem;
+  border: 0.1rem solid white;
+}
+.sells-create form .top .rows .form-group ul {
   padding: 0rem;
   margin: 0rem;
-  position: absolute;
+  position: relative;
   list-style: none;
 }
-.sells-create form .rows .form-group ul li {
+.sells-create form .top .rows .form-group ul li {
+  position: relative;
+  z-index: 1000;
   background: gray;
   color: white;
   padding: 0.5rem 1rem;
   cursor: pointer;
 }
-.sells-create form .rows .form-group ul li:hover {
+.sells-create form .top .rows .form-group ul li:hover {
+  background: black;
+}
+.sells-create form .top .one .form-group {
+  width: 100%;
+}
+.sells-create form .orders-table {
+  width: 100%;
+  z-index: 900;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+.sells-create form .orders-table table {
+  z-index: 900;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  box-shadow: 0rem 0rem 0.5rem gray;
+}
+.sells-create form .orders-table table th {
+  text-align: center;
+  vertical-align: middle;
+}
+.sells-create form .orders-table table .left {
+  text-align: left;
+  vertical-align: middle;
+}
+.sells-create form .orders-table table .right {
+  text-align: right;
+  vertical-align: middle;
+}
+.sells-create form .orders-table table .center {
+  text-align: center;
+  vertical-align: middle;
+}
+.sells-create form .orders-table table .input-sm {
+  min-width: 1rem;
+  max-width: 5rem;
+}
+.sells-create form .orders-table table tfoot .less {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+}
+.sells-create form .sells-create-payment .rows {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  background: gray;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  box-shadow: 0rem 0rem 0.5rem gray;
+}
+.sells-create form .sells-create-payment .rows .form-group {
+  max-height: 4.375rem;
+}
+.sells-create form .sells-create-payment .rows .form-group ul {
+  padding: 0rem;
+  margin: 0rem;
+  position: relative;
+  list-style: none;
+}
+.sells-create form .sells-create-payment .rows .form-group ul li {
+  position: relative;
+  z-index: 1000;
+  background: gray;
+  color: white;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.sells-create form .sells-create-payment .rows .form-group ul li:hover {
   background: black;
 }
 .sells-create form span {
   color: red;
 }
 .sells-create form .btn-container {
+  margin-top: 0.5rem;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.sells-create form .btn-container .sides {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
 }/*# sourceMappingURL=create.css.map */

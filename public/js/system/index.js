@@ -2,7 +2,7 @@ function home()
 {
     $.ajax({
         // url: "/home",
-        url: "/sells/14",
+        url: "/sells/create",
         type: "GET",
         success: function(response){
             $("#content_loader").html(response);

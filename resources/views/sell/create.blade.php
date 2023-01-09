@@ -2,103 +2,163 @@
     <form action="{{ route('sells.store') }}" method="POST" id="sells_create_form" >
         @csrf
 
-        <legend>Create New Transaction</legend>
+        <legend>Create New Sell</legend>
 
-        <div class="rows">
-            <div class="form-group">
-                <label for="sells_create_from_type" class="form-label">Select From Type</label>
-                <select name="from_select" id="sells_create_from_select" class="form-select" onchange="searchFromTrigger()">
-                    <option value="">Choose a option</option>
-                    <option value="user">User</option>
-                    <option value="account">Account</option>
-                </select>
-                <span class="sells-create-error" id="sells_create_from_select_error"></span>
+        <div class="top">
+            <div class="rows one">
+                <div class="form-group">
+                    <label for="sells_create_user_text" class="form-label">Enter customer name, phone, email</label>
+                    <input type="text" id="sells_create_user_text" placeholder="enter customer name" class="form-control" onkeyup="sellsCreateUserSearch()">
+                    <input type="number" id="sells_create_user_id" hidden>
+                    <ul id="sells_create_user_ul">
+
+                    </ul>
+                    <span class="sells-create-error" id="sells_create_user_id_error"></span>
+                </div>
             </div>
+            <div class="rows">
+                <div class="form-group">
+                    <label for="sells_create_product_text" class="form-label">Product name or id</label>
+                    <input type="text" id="sells_create_product_text" placeholder="enter product name" class="form-control" onkeyup="sellsCreateProductSearch()">
+                    <input type="number" id="sells_create_product_id" hidden>
+                    <ul id="sells_create_product_ul">
 
-            <div class="form-group">
-                <label for="sells_create_from_text" class="form-label">From</label>
-                <input type="text" id="sells_create_from_text" name="from" placeholder="enter name" class="form-control" disabled onkeyup="searchFromText()">
-                <ul id="sells_create_from_ul">
+                    </ul>
+                    <span class="sells-create-error" id="sells_create_product_id_error"></span>
+                </div>
 
-                </ul>
-                <input type="text" id="sells_create_from_id" name="from_id" class="form-control" hidden>
-                <span class="sells-create-error" id="sells_create_from_id_error"></span>
-            </div>
+                <div class="form-group">
+                    <label for="" class="form-label">Unit Price</label>
+                    <label id="sells_create_product_unit_price" class="form-label custom-label">0</label>
+                </div>
 
-            <div class="form-group">
-                <label for="sells_create_to_type" class="form-label">Select To Type</label>
-                <select name="to_select" id="sells_create_to_select" class="form-select" onchange="searchToTrigger()">
-                    <option value="">Choose a option</option>
-                    <option value="user">User</option>
-                    <option value="account">Account</option>
-                </select>
-                <span class="sells-create-error" id="sells_create_to_select_error"></span>
-            </div>
+                <div class="form-group">
+                    <label for="sells_create_product_units" class="form-label">Enter units</label>
+                    <input type="number" id="sells_create_product_units" placeholder="enter product units" class="form-control" min="1" onchange="productDetailsChange()" onkeyup="productDetailsChange()">
+                    <span class="sells-create-error" id="sells_create_units_error"></span>
+                </div>
 
-            <div class="form-group">
-                <label for="sells_create_to_text" class="form-label">To</label>
-                <input type="text" id="sells_create_to_text" name="from" placeholder="enter name" class="form-control" disabled onkeyup="searchToText()">
-                <ul id="sells_create_to_ul">
+                <div class="form-group">
+                    <label for="" class="form-label">Subtotal</label>
+                    <label id="sells_create_product_subtotal" class="form-label custom-label">0</label>
+                </div>
 
-                </ul>
-                <input type="text" id="sells_create_to_id" name="to_id" class="form-control" hidden>
-                <span class="sells-create-error" id="sells_create_to_id_error"></span>
-            </div>
-        </div>
+                <div class="form-group">
+                    <label for="sells_create_product_discount" class="form-label">Discount</label>
+                    <input type="number" id="sells_create_product_discount" placeholder="enter product discount" class="form-control" min="0" onchange="productDetailsChange()" onkeyup="productDetailsChange()">
+                    <span class="sells-create-error" id="sells_create_discount_error"></span>
+                </div>
 
-        <div class="rows">
-            <div class="form-group">
-                <label for="sells_create_type" class="form-label">Select to type</label>
-                <select name="type" id="sells_create_type" class="form-select">
-                    <option value="" selected>Select a type</option>
-                    <option value="sell">Sell</option>
-                    <option value="purchase">Purchase</option>
-                    <option value="salary">Salary</option>
-                    <option value="deposite">Deposite</option>
-                    <option value="withdraw">Withdraw</option>
-                    <option value="transfer">Transfer</option>
-                    <option value="other">Other</option>
-                </select>
-                <span class="sells-create-error" id="sells_create_type_error"></span>
-            </div>
+                <div class="form-group">
+                    <label for="" class="form-label">Total</label>
+                    <label id="sells_create_product_total" class="form-label custom-label">0</label>
+                </div>
 
-            <div class="form-group">
-                <label for="sells_create_status" class="form-label">Select status</label>
-                <select name="status" id="sells_create_status" class="form-select">
-                    <option value="" selected>Select a status</option>
-                    <option value="pending">Pending</option>
-                    <option value="active">Active</option>
-                    <option value="banned">Banned</option>
-                    <option value="deleted">Deleted</option>
-                    <option value="restricted">Restricted</option>
-                </select>
-                <span class="sells-create-error" id="sells_create_status_error"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="sells_create_amount" class="form-label">Amount</label>
-                <input type="number" name="amount" id="sells_create_amount" placeholder="enter amount" class="form-control">
-                <span class="sells-create-error" id="sells_create_amount_error"></span>
+                <div class="form-group">
+                    <a href="{{ route('sell-orders.store') }}" data-sell-id="{{ $sell->id }}" id="sells_create_product_add" class="btn btn-success">Add</a>
+                </div>
             </div>
         </div>
 
-        <div class="rows">
-            <div class="form-group">
-                <label for="sells_create_purchase_id">Enter purchase id</label>
-                <input type="number" name="amount" id="sells_create_purchase_id" placeholder="enter purchase id" class="form-control">
-                <span class="sells-create-error" id="sells_create_purchase_id_error"></span>
-            </div>
+        <div id="sells_create_orders_table" class="orders-table">
+            <table class="table table-dark table-bordered table-stripped table-hover caption-top">
+                <caption>Order List</caption>
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>No.</th>
+                        <th>Product</th>
+                        <th>Unit Price</th>
+                        <th>Units</th>
+                        <th>Subtotal</th>
+                        <th>Discount</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
 
-            <div class="form-group">
-                <label for="sells_create_sell_id">Enter sell id</label>
-                <input type="number" name="amount" id="sells_create_sell_id" placeholder="enter sell id" class="form-control">
-                <span class="sells-create-error" id="sells_create_sell_id_error"></span>
+                <tbody>
+                    @foreach ($sell->sellOrders as $so)
+                    <tr>
+                        <td class="center">
+                            <a href="{{ '#' }}" class="btn btn-success">+</a>
+                            <a href="{{ '#' }}" class="btn btn-warning">-</a>
+                            <a href="{{ '#' }}" class="btn btn-danger">X</a>
+                        </td>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $so->product->name }}</td>
+                        <td class="right">{{ number_format((float)$so->unit_price,2,'.','') }}</td>
+                        <td class="right">{{ number_format((float)$so->units,2,'.','') }}</td>
+                        <td class="right">{{ number_format((float)$so->subtotal,2,'.','') }}</td>
+                        <td class="right">{{ number_format((float)$so->discount,2,'.','') }}</td>
+                        <td class="right">{{ number_format(((float)$so->subtotal - (float)$so->discount),2,'.','') }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th colspan="6" rowspan="4" class="center">Order Count: <span id="sells_create_order_count">{{ $sell->total_order_count }}</span> Product Count: <span id="sells_create_product_count">{{ $sell->total_product_count }}</span></th>
+                        <th class="left">Grand Total</th>
+                        <td class="right" id="sells_total_price">{{ number_format((float)$so->total_price,2,'.','') }}</td>
+                    </tr>
+                    <tr>
+                        <th class="left less">
+                            <label for="">Less</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="less" id="sells_less_cash" checked>
+                                <label class="form-check-label" for="sells_less_cash">Cash</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="less" id="sells_less_percentage">
+                                <label class="form-check-label" for="sells_less_percentage">%</label>
+                            </div>
+                            <input type="number" id="sells_create_less_text" class="form-control input-sm">
+                        </th>
+                        <td class="right">{{ number_format((float)$sell->less,2,'.','') }}</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Vat</th>
+                        <td class="right" id="sells_total_vat">{{ number_format((float)$sell->vat,2,'.','') }}</td>
+                    </tr>
+                    <tr>
+                        <th class="left">Final Total</th>
+                        <td class="right" id="sells_total_price">{{ number_format(($sell->total_price - $sell->less + $sell->vat),2,'.','') }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="sells-create-payment">
+            <h3>Payment</h3>
+            <div class="rows">
+                <div class="form-group">
+                    <label for="sells_create_account_id" class="form-label">Enter account name</label>
+                    <input type="text" id="sells_create_account_text" placeholder="enter account name" class="form-control" onkeyup="sellsCreateAccountSearch()">
+                    <input type="number" id="sells_create_account_id" hidden>
+                    <ul id="sells_create_account_ul">
+
+                    </ul>
+                    <span class="sells-create-error" id="sells_create_account_id_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="sells_create_amount" class="form-label">Enter amount</label>
+                    <input type="number" id="sells_create_amount" placeholder="enter payment amount" class="form-control">
+                    <span class="sells-create-error" id="sells_create_amount_error"></span>
+                </div>
             </div>
         </div>
 
         <div class="btn-container">
-            <button type="submit" class="btn btn-primary">Save</button>
-            <a href="{{ route('sells.index') }}" id="sells_create_close" class="btn btn-secondary">Back</a>
+            <div class="sides">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{{ '#' }}" id="sells_create_clear" class="btn btn-warning">Clear</a>
+            </div>
+
+            <div class="sides">
+                <a href="{{ route('sells.index') }}" id="sells_create_close" class="btn btn-secondary">Back</a>
+            </div>
         </div>
     </form>
 </div>
