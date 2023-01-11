@@ -14,12 +14,12 @@
     </thead>
 
     <tbody>
-        @foreach ($sell->sellOrders as $so)
+        @foreach ($sell->sellOrders->whereIn('status',['active','pending']) as $so)
         <tr>
             <td class="center">
-                <a href="{{ '#' }}" class="btn btn-success">+</a>
-                <a href="{{ '#' }}" class="btn btn-warning">-</a>
-                <a href="{{ '#' }}" class="btn btn-danger">X</a>
+                <a href="{{ route('sell-orders.update',$so->id) }}" class="btn btn-success sell-create-sell-order-control sell-create-plus">+</a>
+                <a href="{{ route('sell-orders.update',$so->id) }}" class="btn btn-warning sell-create-sell-order-control sell-create-minus">-</a>
+                <a href="{{ route('sell-orders.destroy',$so->id) }}" class="btn btn-danger sell-create-sell-order-control sell-create-delete">X</a>
             </td>
             <td>{{ $loop->iteration }}</td>
             <td>{{ $so->product->name }}</td>
@@ -36,7 +36,7 @@
         <tr>
             <th colspan="6" rowspan="4" class="center">Order Count: <span id="sells_create_order_count">{{ $sell->total_order_count }}</span> Product Count: <span id="sells_create_product_count">{{ $sell->total_product_count }}</span></th>
             <th class="left">Grand Total</th>
-            <td class="right" id="sells_total_price">{{ number_format((float)$so->total_price,2,'.','') }}</td>
+            <td class="right" id="sells_total_price">{{ number_format((float)$sell->total_price,2,'.','') }}</td>
         </tr>
         <tr>
             <th class="left less">

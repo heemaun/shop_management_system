@@ -34,7 +34,7 @@
 
                 <div class="form-group">
                     <label for="sells_create_product_units" class="form-label">Enter units</label>
-                    <input type="number" id="sells_create_product_units" placeholder="enter product units" class="form-control" min="1" onchange="productDetailsChange()" onkeyup="productDetailsChange()">
+                    <input type="number" id="sells_create_product_units" placeholder="enter product units" class="form-control" min="1" onchange="productDetailsChange()" onkeyup="productDetailsChange()" disabled>
                     <span class="sells-create-error" id="sells_create_units_error"></span>
                 </div>
 
@@ -45,7 +45,7 @@
 
                 <div class="form-group">
                     <label for="sells_create_product_discount" class="form-label">Discount</label>
-                    <input type="number" id="sells_create_product_discount" placeholder="enter product discount" class="form-control" min="0" onchange="productDetailsChange()" onkeyup="productDetailsChange()">
+                    <input type="number" id="sells_create_product_discount" placeholder="enter product discount" class="form-control" min="0" onchange="productDetailsChange()" onkeyup="productDetailsChange()" disabled>
                     <span class="sells-create-error" id="sells_create_discount_error"></span>
                 </div>
 
@@ -77,12 +77,12 @@
                 </thead>
 
                 <tbody>
-                    @foreach ($sell->sellOrders as $so)
+                    @foreach ($sell->sellOrders->whereIn('status',['active','pending']) as $so)
                     <tr>
                         <td class="center">
-                            <a href="{{ '#' }}" class="btn btn-success">+</a>
-                            <a href="{{ '#' }}" class="btn btn-warning">-</a>
-                            <a href="{{ '#' }}" class="btn btn-danger">X</a>
+                            <a href="{{ route('sell-orders.update',$so->id) }}" class="btn btn-success sell-create-sell-order-control sell-create-plus">+</a>
+                            <a href="{{ route('sell-orders.update',$so->id) }}" class="btn btn-warning sell-create-sell-order-control sell-create-minus">-</a>
+                            <a href="{{ route('sell-orders.destroy',$so->id) }}" class="btn btn-danger sell-create-sell-order-control sell-create-delete" data-user="{{ getUser() }}">X</a>
                         </td>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $so->product->name }}</td>
@@ -99,7 +99,7 @@
                     <tr>
                         <th colspan="6" rowspan="4" class="center">Order Count: <span id="sells_create_order_count">{{ $sell->total_order_count }}</span> Product Count: <span id="sells_create_product_count">{{ $sell->total_product_count }}</span></th>
                         <th class="left">Grand Total</th>
-                        <td class="right" id="sells_total_price">{{ number_format((float)$so->total_price,2,'.','') }}</td>
+                        <td class="right" id="sells_total_price">{{ number_format((float)$sell->total_price,2,'.','') }}</td>
                     </tr>
                     <tr>
                         <th class="left less">

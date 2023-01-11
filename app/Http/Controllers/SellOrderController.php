@@ -104,14 +104,16 @@ class SellOrderController extends Controller
 
             $sell = $sellOrder->sell;
 
-            $sell->total_order_count++;
-            $sell->total_product_count += $data['units'];
-            $sell->total_price += ($sellOrder->subtotal - $sellOrder->discount);
+            if(strcmp($sellOrder->status,'active')==0 || ((strcmp($sellOrder->status,'pending')==0) && strcmp($sellOrder->sell->status,'pending')==0)){
+                $sell->total_order_count++;
+                $sell->total_product_count += $data['units'];
+                $sell->total_price += ($sellOrder->subtotal - $sellOrder->discount);
 
-            $sell->save();
+                $sell->save();
 
-            $sell->vat = ($sell->total_price - $sell->less) * 0.15;
-            $sell->save();
+                $sell->vat = ($sell->total_price - $sell->less) * 0.15;
+                $sell->save();
+            }
 
             DB::commit();
 
@@ -161,6 +163,80 @@ class SellOrderController extends Controller
      */
     public function update(Request $request, SellOrder $sellOrder)
     {
+        if(array_key_exists('sell_create',$request->all())){
+            $data = Validator::make($request->all(),[
+                'units'         => 'required|numeric',
+            ]);
+
+            if($data->fails()){
+                return response()->json([
+                    'status' => 'errors',
+                    'errors' => $data->errors(),
+                ]);
+            }
+
+            DB::beginTransaction();
+
+            try{
+                $data = $data->validate();
+
+                $sell = $sellOrder->sell;
+
+                // return response()->json([
+                //     'sell_order' => $sellOrder,
+                //     'sell' => $sell,
+                //     'data' => $data,
+                // ]);
+
+                if(strcmp($data['units'],'-1') == 0 && $sellOrder->units == 1){
+                    $sellOrder->delete();
+                }
+                else{
+                    $sellOrder->units += $data['units'];
+                    $sellOrder->save();
+
+                    $sellOrder->subtotal = $sellOrder->units * $sellOrder->unit_price;
+                    $sellOrder->user_id = getUser()->id;
+
+                    $sellOrder->save();
+                }
+
+                $sell_total_price = 0;
+                $sell_total_product_count = 0;
+                $sell_total_order_count = 0;
+
+                foreach($sell->sellOrders->whereIn('status',['active','pending']) as $so){
+                    $sell_total_price += ($so->subtotal - $so->discount);
+                    $sell_total_product_count += $so->units;
+                    $sell_total_order_count++;
+                }
+
+                $sell->total_price = $sell_total_price;
+                $sell->total_product_count = $sell_total_product_count;
+                $sell->total_order_count = $sell_total_order_count;
+                $sell->vat = ($sell_total_price - $sell->less) * 0.15;
+                $sell->user_id = getUser()->id;
+
+                $sell->save();
+
+                DB::commit();
+
+                return response(view('sell.sell-table',compact('sell')));
+
+                // return response()->json([
+                //     'status'    => 'success',
+                //     'message'   => 'Sell Order updated successfully',
+                //     'url'       => view('sell.sell-table',compact('sell')),
+                // ]);
+            }catch(Exception $e){
+                DB::rollBack();
+                return response()->json([
+                    'status'    => 'exception',
+                    'message'   => $e->getMessage(),
+                ]);
+            }
+        }
+
         $data = Validator::make($request->all(),[
             'sell_id'       => 'required',
             'product_id'    => 'required',
@@ -218,26 +294,51 @@ class SellOrderController extends Controller
      */
     public function destroy(SellOrder $sellOrder, Request $request)
     {
-        $data = Validator::make($request->all(),[
-            'password' => 'required|min:8|max:20',
-        ]);
-
-        if($data->fails()){
-            return response()->json([
-                'status' => 'errors',
-                'errors' => $data->errors(),
+        $data['password'] = '1';
+        if(!array_key_exists('sell_create',$request->all())){
+            $data = Validator::make($request->all(),[
+                'password' => 'required|min:8|max:20',
             ]);
+
+            if($data->fails()){
+                return response()->json([
+                    'status' => 'errors',
+                    'errors' => $data->errors(),
+                ]);
+            }
+            $data = $data->validate();
         }
 
         DB::beginTransaction();
 
         try{
-            $data = $data->validate();
-
-            if(Hash::check($data['password'],getUser()->password)){
+            if(Hash::check($data['password'],getUser()->password) || array_key_exists('sell_create',$request->all())){
+                $sell = $sellOrder->sell;
                 $sellOrder->delete();
 
+                $sell_total_price = 0;
+                $sell_total_product_count = 0;
+                $sell_total_order_count = 0;
+
+                foreach($sell->sellOrders->whereIn('status',['active','pending']) as $so){
+                    $sell_total_price += ($so->subtotal - $so->discount);
+                    $sell_total_product_count += $so->units;
+                    $sell_total_order_count++;
+                }
+
+                $sell->total_price = $sell_total_price;
+                $sell->total_product_count = $sell_total_product_count;
+                $sell->total_order_count = $sell_total_order_count;
+                $sell->vat = ($sell_total_price - $sell->less) * 0.15;
+                $sell->user_id = getUser()->id;
+
+                $sell->save();
+
                 DB::commit();
+
+                if(array_key_exists('sell_create',$request->all())){
+                    return view('sell.sell-table',compact('sell'));
+                }
 
                 return response()->json([
                     'status'    => 'success',

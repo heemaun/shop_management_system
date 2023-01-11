@@ -135,6 +135,10 @@ $("#content_loader").on("click","#sells_create_product_ul .ul-clickable", functi
     $("#sells_create_product_unit_price").text(unit_price);
     $("#sells_create_product_subtotal").html(unit_price);
     $("#sells_create_product_total").text(unit_price);
+
+    $("#sells_create_product_units").removeAttr("disabled");
+    $("#sells_create_product_discount").removeAttr("disabled");
+    $("#sells_create_product_add").removeAttr("disabled");
 });
 
 function sellsCreateAccountSearch()
@@ -180,7 +184,6 @@ $("#content_loader").on("click","#sells_create_product_add",function (e){
     $.ajax({
         url: url,
         type: "POST",
-        // dataType: 'json',
         data:{
             sell_id: sell_id,
             product_id: product_id,
@@ -188,12 +191,20 @@ $("#content_loader").on("click","#sells_create_product_add",function (e){
             discount: discount,
             status: status,
         },
-        beforeSend: function(){
-            console.log(url,sell_id,product_id,units,discount,status);
-        },
         success: function(response){
-            console.log(response);
             $("#sells_create_orders_table").html(response);
+
+            $("#sells_create_product_text").val("");
+            $("#sells_create_product_id").val("");
+            $("#sells_create_product_units").val("");
+            $("#sells_create_product_discount").val("");
+            $("#sells_create_product_unit_price").text("0");
+            $("#sells_create_product_subtotal").html("0");
+            $("#sells_create_product_total").text("0");
+
+            $("#sells_create_product_units").attr("disabled","true");
+            $("#sells_create_product_discount").attr("disabled","true");
+            $("#sells_create_product_add").attr("disabled","true");
         }
     });
 });
@@ -210,3 +221,36 @@ function productDetailsChange()
     $("#sells_create_product_subtotal").html(subtotal);
     $("#sells_create_product_total").html(total);
 }
+
+$("#content_loader").on("click",".sell-create-sell-order-control",function(e){
+    e.preventDefault();
+    let url = $(this).attr("href");
+    let units = -1;
+    let type = "PUT";
+    let password = $(this).attr("data-user");
+
+    if($(this).hasClass("sell-create-plus")){
+        units = 1;
+    }
+
+    if($(this).hasClass("sell-create-delete")){
+        type = "DELETE"
+    }
+
+    $.ajax({
+        url: url,
+        type: type,
+        // dataType: "json",
+        data:{
+            units: units,
+            sell_create: "true",
+        },
+        beforeSend: function(){
+            // console.log(password);
+        },
+        success: function(response){
+            // console.log(response);
+            $("#content_loader #sells_create_orders_table").html(response);
+        }
+    });
+});

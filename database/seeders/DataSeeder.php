@@ -210,16 +210,18 @@ class DataSeeder extends Seeder
                 'created_at'    => date('Y-m-d H:m:s',rand(strtotime('2000-01-01'),strtotime('2023-12-31 23:59:59'))),
             ]);
 
-            $sellOrder->sell->total_price += ($sellOrder->subtotal - $sellOrder->discount);
-            $sellOrder->sell->total_order_count++ ;
-            $sellOrder->sell->total_product_count += $sellOrder->units;
-            $sellOrder->sell->save();
+            if(strcmp($sellOrder->status,'active')==0 || ((strcmp($sellOrder->status,'pending')==0) && strcmp($sellOrder->sell->status,'pending')==0)){
+                $sellOrder->sell->total_price += ($sellOrder->subtotal - $sellOrder->discount);
+                $sellOrder->sell->total_order_count++ ;
+                $sellOrder->sell->total_product_count += $sellOrder->units;
+                $sellOrder->sell->save();
 
-            $sellOrder->sell->less = $sellOrder->sell->total_price * rand(1,5) * 0.01;
-            $sellOrder->sell->save();
+                $sellOrder->sell->less = $sellOrder->sell->total_price * rand(1,5) * 0.01;
+                $sellOrder->sell->save();
 
-            $sellOrder->sell->vat = ($sellOrder->sell->total_price - $sellOrder->sell->less) * 0.15;
-            $sellOrder->sell->save();
+                $sellOrder->sell->vat = ($sellOrder->sell->total_price - $sellOrder->sell->less) * 0.15;
+                $sellOrder->sell->save();
+            }
         }
 
         for($x=0;$x<100;$x++){
